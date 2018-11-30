@@ -128,12 +128,17 @@ function russianRoulette() {
 }
 
 var sqlCreds = JSON.parse(fs.readFileSync('misc/mysql.json', 'utf8'));
-// Connect to mysql
+// create connection variable
 var con = mysql.createConnection({
     host: sqlCreds.db.host,
     user: sqlCreds.db.user,
     password: sqlCreds.db.password,
     database: sqlCreds.db.database
+});
+//connect
+con.connect(function(err) {
+    if (err) throw err;
+    console.log("MySQL:     [OK]");
 });
 
 fs.readFile('misc/auth.txt', 'utf8', function(err, contents) {
