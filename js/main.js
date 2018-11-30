@@ -2,7 +2,9 @@
 var Discord = require('discord.js');
 //logging lib
 var logger = require('winston');
-//auth token
+//mysql lib
+var mysql = require('mysql');
+//for reading and writing files
 var fs = require('fs');
 
 const prefix = "!";
@@ -124,6 +126,15 @@ function russianRoulette() {
     }
     return text;
 }
+
+var sqlCreds = JSON.parse(fs.readFileSync('misc/mysql.json', 'utf8'));
+// Connect to mysql
+var con = mysql.createConnection({
+    host: sqlCreds.db.host,
+    user: sqlCreds.db.user,
+    password: sqlCreds.db.password,
+    database: sqlCreds.db.database
+});
 
 fs.readFile('misc/auth.txt', 'utf8', function(err, contents) {
     console.log("trying to auth");
