@@ -1,7 +1,8 @@
 var Discord = require('discord.io');
 var logger = require('winston');
-var authentication = require('../auth.json');
+var authentication = require('../misc/auth.json');
 var fs = require('fs');
+
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
     colorize:true
@@ -32,7 +33,7 @@ b.on('message', function (user, userID, channelID, message, evt) {
         switch (cmd) {
             case 'j':
                 var text;
-                fs.readFile('../misc/input.txt', 'utf8', function(err, contents) {
+                fs.readFile('misc/input.txt', 'utf8', function(err, contents) {
                     var all = contents;
                     var splitted = all.split('\n');
                     var random = Math.floor(Math.random() * splitted.length);
