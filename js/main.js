@@ -32,7 +32,7 @@ b.on('message', function (user, userID, channelID, message, evt) {
         switch (cmd) {
             case 'j':
                 var text;
-                fs.readFile('input.txt', 'utf8', function(err, contents) {
+                fs.readFile('../misc/input.txt', 'utf8', function(err, contents) {
                     var all = contents;
                     var splitted = all.split('\n');
                     var random = Math.floor(Math.random() * splitted.length);
