@@ -1,8 +1,13 @@
 {
-    "name":"li-bot",
-    "version":"1.0.0",
-    "description":"test bot please ignore :panther:",
-    "mail":"js/main.js",
-    "author":"Ilpo Loikkanen",
-    "dependencies":{}
+  "name": "li-bot",
+  "version": "1.0.0",
+  "description": "test bot please ignore :panther:",
+  "mail": "js/main.js",
+  "author": "Ilpo Loikkanen",
+  "dependencies": {
+    "discord.io": "^2.5.3"
+  },
+  "scripts": {
+    "start": "node js/main.js"
+  }
 }
