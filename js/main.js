@@ -102,17 +102,39 @@ b.on('message', message => {
                 } else {
                     message.reply('You are not in a voice channel I could join. >:(')
                 }
+                break;
+            
+            case 'casino':
+                switch (args[0]){
+                    case 'register':
+                        con.query("SELECT * FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+                            if (!err && result.length == 0){
+                                con.query("INSERT INTO user (id, name, money) VALUES (" + con.escape(message.member.id) + ", " + con.escape(message.member.displayName) + ", 500)", (err, result, field) => {
+                                    message.reply("Pelitili luotu! Rekisteröimisbonus 500 kolikkoa!")
+                                });
+                            } else {
+                                message.reply("Olet jo rekisteröitynyt");
+                            }
+                        });
+                        
+
+                    break;
+                    case 'saldo':
+                        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+                            if (!err && result.length != 0) {
+                                message.reply("Pelitililläsi on " + result[0].money + " kolikkoa");
+                            } else {
+                                message.reply("Error! Onko sinulla varmasti pelitili?");
+                            }
+                        });
+                    break;
+                    case 'coinflip':
+                    
+                    break;
+                    }
         }
     }
 });
-
-function playAudio(channel, path) {
-    channel.join()
-    .then(connection => {
-
-    })
-    .catch(console.log);
-}
 
 function russianRoulette() {
     var text = "*click*";
