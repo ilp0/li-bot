@@ -1,5 +1,5 @@
 # li-bot
-Discord bot testing
+Discord bot experiments
 
 ### Usage
 1. Clone repo 
