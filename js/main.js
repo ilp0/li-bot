@@ -64,7 +64,7 @@ b.on('message', message => {
                 if(message.member.voiceChannel) {
                     message.member.voiceChannel.join()
                     .then(connection => {
-                        const dispatcher = connection.playFile('misc/audio/fortnite-ben-shapiro.mp3', {passes: 3});
+                        const dispatcher = connection.playFile('misc/audio/fortnite-ben-shapiro.mp3', {passes: 3, volume: 0.4});
                         dispatcher.on("end", end => {
                             message.member.voiceChannel.leave();
                         });
@@ -80,7 +80,7 @@ b.on('message', message => {
                 if(message.member.voiceChannel) {
                     message.member.voiceChannel.join()
                     .then(connection => {
-                        const dispatcher = connection.playFile('misc/audio/istun-poikittain.mp3', {passes: 3});
+                        const dispatcher = connection.playFile('misc/audio/istun-poikittain.mp3', {passes: 3, volume: 0.4});
                         dispatcher.on("end", end => {
                             message.member.voiceChannel.leave();
                         });
@@ -128,8 +128,28 @@ b.on('message', message => {
                             }
                         });
                     break;
-                    case 'coinflip':
-                    
+                    case 'flip':
+                        bet = parseInt(args[1], 10);
+                        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+                            if (!err && result.length != 0) {
+                                if(result[0].money >= bet && bet > 0){
+                                    var coin = Math.floor(Math.random() * 2);
+                                    if (coin === 0) {
+                                        message.reply("Kruuna, voitit " + (bet*2) + " kolikkoa. Saldosi on " + (result[0].money + bet));
+                                        con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id)); 
+                                    } else {
+                                        message.reply("Klaava, hävisit "+ bet + " kolikkoa. Saldosi on " + (result[0].money - bet));
+                                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id));
+                                    } 
+                                } else {
+                                    message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " kolikkoa");
+                                }
+                                
+                            } else {
+                                message.reply("Error! Onko sinulla varmasti pelitili?");
+                            }
+                        });
+                        
                     break;
                     }
         }
