@@ -6,7 +6,7 @@ var logger = require('winston');
 var mysql = require('mysql');
 //for reading and writing files
 var fs = require('fs');
-
+//prefix for
 const prefix = "!";
 
 //logger stuff
