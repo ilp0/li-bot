@@ -56,7 +56,7 @@ b.on('message', message => {
                 break;
             //help
             case 'help':
-                var text = "```AVAILABLE COMMANDS: \n !j -- random j quote \n !rr -- russian roulette game \n !rand <input> -- random number generator \n !help -- shows this message``` \nBot source code available @ https://github.com/ilp0/li-bot";
+                var text = "```AVAILABLE COMMANDS: \n !j -- random j quote \n !rr -- russian roulette game \n !rand <input> -- random number generator \n !kasino <command> <bet-size> -- kasino games \n         register\n         saldo\n         flip\n         bj\n !help -- shows this message``` \nBot source code available @ https://github.com/ilp0/li-bot";
                 message.reply(text);
                 break;
             //play ben shapiro
@@ -104,7 +104,7 @@ b.on('message', message => {
                 }
                 break;
             
-            case 'casino':
+            case 'kasino':
                 switch (args[0]){
                     case 'register':
                         con.query("SELECT * FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
@@ -151,6 +151,33 @@ b.on('message', message => {
                         });
                         
                     break;
+                    case 'bj':{
+                         bet = parseInt(args[1], 10);
+                        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+                            if (!err && result.length != 0) {
+                                if(result[0].money >= bet && bet > 0){
+                                    var coin = Math.floor(Math.random() * 2);
+                                    if (coin === 0) {
+                                        message.reply("Kruuna, voitit " + (bet*2) + " kolikkoa. Saldosi on " + (result[0].money + bet));
+                                        con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id)); 
+                                    } else {
+                                        message.reply("Klaava, hävisit "+ bet + " kolikkoa. Saldosi on " + (result[0].money - bet));
+                                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id));
+                                    } 
+                                } else {
+                                    message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " kolikkoa");
+                                }
+                                
+                            } else {
+                                message.reply("Error! Onko sinulla varmasti pelitili?");
+                            }
+                        });
+                        
+                    break;
+
+                    }
+                    default: 
+                        message.reply("Virheellinen kasino-komento. Yritä uudelleen.");
                     }
         }
     }
