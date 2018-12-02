@@ -8,7 +8,10 @@ var mysql = require('mysql');
 var fs = require('fs');
 //prefix for
 const prefix = "!";
+//card deck for blackjack
+const bjDeck = [1,2,3,4,5,6,7,8,9,10,10,10,10];
 
+var bjSessions = [{}];
 //logger stuff
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
@@ -104,7 +107,7 @@ b.on('message', message => {
                 }
                 break;
             
-            case 'kasino':
+            case 'k':
                 switch (args[0]){
                     case 'register':
                         con.query("SELECT * FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
@@ -152,30 +155,116 @@ b.on('message', message => {
                         
                     break;
                     case 'bj':{
-                         bet = parseInt(args[1], 10);
-                        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
-                            if (!err && result.length != 0) {
-                                if(result[0].money >= bet && bet > 0){
-                                    var coin = Math.floor(Math.random() * 2);
-                                    if (coin === 0) {
-                                        message.reply("Kruuna, voitit " + (bet*2) + " kolikkoa. Saldosi on " + (result[0].money + bet));
-                                        con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id)); 
-                                    } else {
-                                        message.reply("Klaava, hävisit "+ bet + " kolikkoa. Saldosi on " + (result[0].money - bet));
-                                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id));
-                                    } 
+                        switch (args[1]){
+                            case 'new': 
+                                bjSessions.map((session, i) => {
+                                if(session.status === "active" && session.id === message.member.id){
+                                    message.reply("Peli on jo käynnissä! Käytä komentoa `!k bj hit` tai `!k bj stay`")
                                 } else {
-                                    message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " kolikkoa");
+                                    bet = parseInt(args[2], 10);
+                                    con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+                                    if (!err && result.length != 0) {
+                                        if(result[0].money >= bet && bet > 0){
+                                            let hand = [bjDeck[Math.floor(Math.random() * bjDeck.length)],bjDeck[Math.floor(Math.random() * bjDeck.length)]];
+                                            let dealerHand = [bjDeck[Math.floor(Math.random() * bjDeck.length)], bjDeck[Math.floor(Math.random() * bjDeck.length)]];
+                                            message.reply("\nKätesi: " + hand[0] + " " + hand[1] + " = " + (hand[0] + hand[1] + "\nJakajan käsi: " + dealerHand[0] + " X" + "\n!k bj hit || !k bj stay"));
+                                            let gameStatus = "active";
+                                            bjSessions.push({id: message.member.id, bet: bet, hand: hand, dealerHand: dealerHand, status: gameStatus });
+                                        } else {
+                                            message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " kolikkoa");
+                                        }
+                                    } else {
+                                        message.reply("Error! Onko sinulla varmasti pelitili?");
+                                    }
+                                    });
                                 }
-                                
-                            } else {
-                                message.reply("Error! Onko sinulla varmasti pelitili?");
-                            }
-                        });
-                        
-                    break;
-
+                                });
+                            break;
+                            case 'hit':
+                                let isGame = false;
+                                bjSessions.map((session, i) => {
+                                    if (session.id === message.member.id){
+                                        let handString = "";
+                                        let total;
+                                        session.hand.map((card,i) => {
+                                            handString += card + " ";
+                                            total += card;
+                                        });
+                                        let newCard = bjDeck[Math.floor(Math.random() * bjDeck.length)]
+                                        session.hand.push(newCard);
+                                        message.reply("Your new hand: " + handString + "" + newCard + " = " + total);
+                                        if(total > 21) {
+                                            message.reply("Yli 21. Häivisit " + session.bet + " kolikkoa.");
+                                            isGame = false;
+                                            session.gameStatus = "inactive"
+                                        } else {
+                                            isGame = true;
+                                        }
+                                        bjSessions[i] = session;
+                                        
+                                    }
+                                });
+                                if (!isGame) message.reply("Error! Peliä ei löytynyt. Kokeile `!k bj new <bet>`");
+                                break;
+                            break;
+                            case 'stay':
+                                bjSessions.map((session, i) => {
+                                    if (session.status === "active" && session.id === message.member.id){
+                                        if (session.id === message.member.id){
+                                            let handString = "";
+                                            let dealerHandString = ""; 
+                                            let dealerTotal = 0;
+                                            let playerTotal = 0;
+                                            let newCard;
+                                            session.dealerHand.map((card,i) => {
+                                                dealerHandString += card + " ";
+                                                dealerTotal += card;
+                                            });
+                                            session.hand.map((card,i) => {
+                                                handString += card + " ";
+                                                playerTotal += card;
+                                            });
+                                            message.reply("\nYour hand: " + handString + "\n Dealers hand: " + dealerHandString);
+                                            while (dealerTotal < 16) {
+                                                //hit
+                                                newCard = bjDeck[Math.floor(Math.random() * bjDeck.length)];
+                                                session.dealerHand.push(newCard);
+                                                dealerTotal += newCard
+                                                dealerHandString += card + " ";
+                                                message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
+                                                if (dealerTotal > 21) {
+                                                    //dealer loses
+                                                    message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
+                                                    console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.")
+                                                } else if (playerTotal === 21){
+                                                    //BLACKJACK
+                                                    message.reply("BLACKJACK! VOITIT " + (session.bet * 3) + " KOLIKKOA!");
+                                                    console.log("BLACKJACK! VOITIT " + (session.bet * 3) + " KOLIKKOA!");
+                                                } else if (playerTotal > dealerTotal) {
+                                                    //pelaaja voittaa
+                                                    message.reply("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
+                                                    console.log("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
+                                                } else if (playerTotal === dealerTotal) {
+                                                    //rahojen palautus
+                                                    message.reply("Tasapeli. Rahojen palautus.")
+                                                    console.log("Tasapeli. Rahojen palautus.")
+                                                } else if (playerTotal < dealerHandString) {
+                                                    //dealeri häviää
+                                                    message.reply("Hävisit jakajalle " + session.bet + " kolikkoa.");
+                                                    console.log("Hävisit jakajalle " + session.bet + " kolikkoa.");
+                                                    }
+                                                }
+                                            }
+                                            message.reply("Game ended");
+                                            session.gameStatus = "inactive";
+                                            bjSessions[i] = session;
+                                    }
+                                });
+                                //if (!isGame) message.reply("Error! Peliä ei löytynyt. Kokeile `!k bj new <bet>`");
+                            break;
+                        }
                     }
+                    break;
                     default: 
                         message.reply("Virheellinen kasino-komento. Yritä uudelleen.");
                     }
@@ -215,3 +304,11 @@ fs.readFile('misc/auth.txt', 'utf8', function(err, contents) {
     b.login(contents);
 });
 
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+      if ((new Date().getTime() - start) > milliseconds){
+        break;
+      }
+    }
+  }
