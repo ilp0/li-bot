@@ -159,7 +159,7 @@ b.on('message', message => {
                             case 'new': 
                                 bjSessions.map((session, i) => {
                                 if(session.status === "active" && session.id === message.member.id){
-                                    message.reply("Peli on jo käynnissä! Käytä komentoa `!k bj hit` tai `!k bj stay`")
+
                                 } else {
                                     bet = parseInt(args[2], 10);
                                     con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
@@ -181,31 +181,28 @@ b.on('message', message => {
                                 });
                             break;
                             case 'hit':
-                                let isGame = false;
+                                let isGame = false; 
+                                let newCard;
                                 bjSessions.map((session, i) => {
-                                    if (session.id === message.member.id){
+                                    if (session.id === message.member.id && session.status === 'active'){
                                         let handString = "";
-                                        let total;
+                                        let total = 0;
                                         session.hand.map((card,i) => {
                                             handString += card + " ";
                                             total += card;
                                         });
-                                        let newCard = bjDeck[Math.floor(Math.random() * bjDeck.length)]
+                                        newCard = bjDeck[Math.floor(Math.random() * bjDeck.length)]
                                         session.hand.push(newCard);
-                                        message.reply("Your new hand: " + handString + "" + newCard + " = " + total);
+                                        total += newCard;
+                                        handString += newCard + " ";
+                                        message.reply("Your new hand: " + handString + " = " + total);
                                         if(total > 21) {
-                                            message.reply("Yli 21. Häivisit " + session.bet + " kolikkoa.");
-                                            isGame = false;
+                                            message.reply("Yli 21. Hävisit " + session.bet + " kolikkoa.");
                                             session.gameStatus = "inactive"
-                                        } else {
-                                            isGame = true;
-                                        }
+                                        } 
                                         bjSessions[i] = session;
-                                        
                                     }
                                 });
-                                if (!isGame) message.reply("Error! Peliä ei löytynyt. Kokeile `!k bj new <bet>`");
-                                break;
                             break;
                             case 'stay':
                                 bjSessions.map((session, i) => {
@@ -215,7 +212,7 @@ b.on('message', message => {
                                             let dealerHandString = ""; 
                                             let dealerTotal = 0;
                                             let playerTotal = 0;
-                                            let newCard;
+                                            let newCard = 0;
                                             session.dealerHand.map((card,i) => {
                                                 dealerHandString += card + " ";
                                                 dealerTotal += card;
@@ -224,32 +221,36 @@ b.on('message', message => {
                                                 handString += card + " ";
                                                 playerTotal += card;
                                             });
-                                            message.reply("\nYour hand: " + handString + "\n Dealers hand: " + dealerHandString);
+                                            message.reply("\nYour hand: " + handString + " = " + playerTotal + "\n Dealers hand: " + dealerHandString + " = " + dealerTotal);
                                             while (dealerTotal < 16) {
                                                 //hit
                                                 newCard = bjDeck[Math.floor(Math.random() * bjDeck.length)];
                                                 session.dealerHand.push(newCard);
-                                                dealerTotal += newCard
-                                                dealerHandString += card + " ";
-                                                message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
+                                                dealerTotal += newCard;
+                                                dealerHandString += newCard + " ";
                                                 if (dealerTotal > 21) {
                                                     //dealer loses
+                                                    message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
-                                                    console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.")
-                                                } else if (playerTotal === 21){
+                                                    console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
+                                                } else if (playerTotal === 21 && dealerTotal >= 16){
                                                     //BLACKJACK
+                                                    message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("BLACKJACK! VOITIT " + (session.bet * 3) + " KOLIKKOA!");
                                                     console.log("BLACKJACK! VOITIT " + (session.bet * 3) + " KOLIKKOA!");
-                                                } else if (playerTotal > dealerTotal) {
+                                                } else if (playerTotal > dealerTotal && dealerTotal >= 16 && dealerTotal < 21) {
                                                     //pelaaja voittaa
+                                                    message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     console.log("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
-                                                } else if (playerTotal === dealerTotal) {
+                                                } else if (playerTotal === dealerTotal && dealerTotal >= 16) {
                                                     //rahojen palautus
+                                                    message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Tasapeli. Rahojen palautus.")
                                                     console.log("Tasapeli. Rahojen palautus.")
-                                                } else if (playerTotal < dealerHandString) {
+                                                } else if (playerTotal < dealerHandString && dealerTotal >= 16) {
                                                     //dealeri häviää
+                                                    message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Hävisit jakajalle " + session.bet + " kolikkoa.");
                                                     console.log("Hävisit jakajalle " + session.bet + " kolikkoa.");
                                                     }
