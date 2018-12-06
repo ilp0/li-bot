@@ -233,7 +233,7 @@ b.on('message', message => {
                                                 session.dealerHand.push(newCard);
                                                 dealerTotal += newCard;
                                                 dealerHandString += newCard + " ";
-                                                if (dealerTotal > 21) {
+                                                if (dealerTotal > 21 && playerTotal !== 21) {
                                                     //dealer loses
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
