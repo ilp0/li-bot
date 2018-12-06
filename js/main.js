@@ -201,6 +201,7 @@ b.on('message', message => {
                                         total += newCard;
                                         handString += newCard + " ";
                                         message.reply("Your new hand: " + handString + " = " + total);
+                                        bjSessions[i] = session;
                                         if(total > 21) {
                                             let isDiscounted = false;
                                             session.hand.map((c, i) => {
@@ -208,6 +209,8 @@ b.on('message', message => {
                                                     session.hand[i] = 1;
                                                     total -= 10;
                                                     isDiscounted = true;
+                                                    bjSessions[i] = session;
+
                                                 }
                                             });
                                             if(total > 21){
@@ -218,7 +221,6 @@ b.on('message', message => {
                                             }
 
                                         } 
-                                        bjSessions[i] = session;
                                     }
                                 });
                             break;
