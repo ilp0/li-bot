@@ -237,7 +237,7 @@ b.on('message', message => {
                                                 dealerHandString += newCard + " ";
                                                 if (dealerTotal > 21 && playerTotal !== 21) {
                                                     //dealer loses
-                                                    message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
+                                                    message.reply("\nYour hand: " + handString + " = " + playerTotal + "\nDealers hand: " + dealerHandString + " = " + dealerTotal);
                                                     message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.id)); 
