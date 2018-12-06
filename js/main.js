@@ -251,7 +251,7 @@ b.on('message', message => {
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Tasapeli. Rahojen palautus.")
                                                     console.log("Tasapeli. Rahojen palautus.")
-                                                } else if (playerTotal < dealerHandString && dealerTotal >= 16) {
+                                                } else if (playerTotal < dealerTotal && dealerTotal >= 16) {
                                                     //dealeri häviää
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Hävisit jakajalle " + session.bet + " kolikkoa.");
@@ -261,8 +261,6 @@ b.on('message', message => {
                                                     }
                                                 }
                                             }
-                                            message.reply("Game ended");
-                                            session.gameStatus = "inactive";
                                             bjSessions.splice(i, 1);
                                     }
                                 });
