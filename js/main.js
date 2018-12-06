@@ -137,7 +137,12 @@ b.on('message', message => {
                             if (!err && result.length != 0) {
                                 if(result[0].money >= bet && bet > 0){
                                     var coin = Math.floor(Math.random() * 2);
-                                    if (coin === 0) {
+                                    var side = Math.floor(Math.random() * 50);
+                                    if (side === 25) {
+                                        message.reply("Kolikko tippui sivulleen. Hävisit " + (bet) + " kolikkoa. Saldosi on "+ (result[0].money - bet));
+                                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id));
+
+                                    } else if (coin === 0) {
                                         message.reply("Kruuna, voitit " + (bet*2) + " kolikkoa. Saldosi on " + (result[0].money + bet));
                                         con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id)); 
                                     } else {
