@@ -233,16 +233,19 @@ b.on('message', message => {
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
+                                                    con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.id)); 
                                                 } else if (playerTotal === 21 && dealerTotal >= 16){
                                                     //BLACKJACK
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
-                                                    message.reply("BLACKJACK! VOITIT " + (session.bet * 3) + " KOLIKKOA!");
-                                                    console.log("BLACKJACK! VOITIT " + (session.bet * 3) + " KOLIKKOA!");
+                                                    message.reply("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " KOLIKKOA!");
+                                                    console.log("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " KOLIKKOA!");
+                                                    con.query("UPDATE user SET money = money +" + con.escape(Math.floor(session.bet * 1.5)) + " WHERE id = " + con.escape(message.member.id)); 
                                                 } else if (playerTotal > dealerTotal && dealerTotal >= 16 && dealerTotal < 21) {
                                                     //pelaaja voittaa
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     console.log("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
+                                                    con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.id)); 
                                                 } else if (playerTotal === dealerTotal && dealerTotal >= 16) {
                                                     //rahojen palautus
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
@@ -253,12 +256,14 @@ b.on('message', message => {
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Hävisit jakajalle " + session.bet + " kolikkoa.");
                                                     console.log("Hävisit jakajalle " + session.bet + " kolikkoa.");
+                                                    con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.id)); 
+
                                                     }
                                                 }
                                             }
                                             message.reply("Game ended");
                                             session.gameStatus = "inactive";
-                                            bjSessions[i] = session;
+                                            bjSessions.splice(i, 1);
                                     }
                                 });
                                 //if (!isGame) message.reply("Error! Peliä ei löytynyt. Kokeile `!k bj new <bet>`");
