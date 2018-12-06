@@ -9,7 +9,7 @@ var fs = require('fs');
 //prefix for
 const prefix = "!";
 //card deck for blackjack
-const bjDeck = [1,2,3,4,5,6,7,8,9,10,10,10,10];
+const bjDeck = [2,3,4,5,6,7,8,9,10,10,10,10,11];
 
 var bjSessions = [{}];
 //logger stuff
@@ -202,9 +202,20 @@ b.on('message', message => {
                                         handString += newCard + " ";
                                         message.reply("Your new hand: " + handString + " = " + total);
                                         if(total > 21) {
-                                            message.reply("Yli 21. Hävisit " + session.bet + " kolikkoa.");
-                                            session.gameStatus = "inactive"
-                                            con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
+                                            let isDiscounted = false;
+                                            session.hand.map((c, i) => {
+                                                if (c === 11 && !isDiscounted) {
+                                                    session.hand[i] = 1;
+                                                    total -= 10;
+                                                    isDiscounted = true;
+                                                }
+                                            });
+                                            if(total > 21){
+                                                message.reply("Yli 21. Hävisit " + session.bet + " kolikkoa.");
+                                                session.gameStatus = "inactive";
+                                                con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
+                                                bjSessions.splice(i, 1);
+                                            }
 
                                         } 
                                         bjSessions[i] = session;
