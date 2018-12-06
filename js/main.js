@@ -204,6 +204,8 @@ b.on('message', message => {
                                         if(total > 21) {
                                             message.reply("Yli 21. Hävisit " + session.bet + " kolikkoa.");
                                             session.gameStatus = "inactive"
+                                            con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
+
                                         } 
                                         bjSessions[i] = session;
                                     }
@@ -245,7 +247,7 @@ b.on('message', message => {
                                                     message.reply("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " KOLIKKOA!");
                                                     console.log("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " KOLIKKOA!");
                                                     con.query("UPDATE user SET money = money +" + con.escape(Math.floor(session.bet * 1.5)) + " WHERE id = " + con.escape(session.id)); 
-                                                } else if (playerTotal > dealerTotal && dealerTotal >= 16 && dealerTotal < 21) {
+                                                } else if (playerTotal > dealerTotal && dealerTotal >= 16 && dealerTotal <= 21) {
                                                     //pelaaja voittaa
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
