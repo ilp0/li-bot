@@ -245,7 +245,7 @@ b.on('message', message => {
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     console.log("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
-                                                    con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id); 
+                                                    con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
                                                 } else if (playerTotal === dealerTotal && dealerTotal >= 16) {
                                                     //rahojen palautus
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
