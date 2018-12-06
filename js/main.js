@@ -239,7 +239,7 @@ b.on('message', message => {
                                                     message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.id)); 
-                                                } else if (playerTotal === 21 && dealerTotal >= 16){
+                                                } else if (playerTotal === 21){
                                                     //BLACKJACK
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " KOLIKKOA!");
@@ -257,7 +257,7 @@ b.on('message', message => {
                                                     message.reply("Tasapeli. Rahojen palautus.")
                                                     console.log("Tasapeli. Rahojen palautus.")
                                                 } else if (playerTotal < dealerTotal && dealerTotal >= 16) {
-                                                    //dealeri häviää
+                                                    //pelaaja häviää
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Hävisit jakajalle " + session.bet + " kolikkoa.");
                                                     console.log("Hävisit jakajalle " + session.bet + " kolikkoa.");
