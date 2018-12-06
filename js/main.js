@@ -239,13 +239,13 @@ b.on('message', message => {
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " KOLIKKOA!");
                                                     console.log("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " KOLIKKOA!");
-                                                    con.query("UPDATE user SET money = money +" + con.escape(Math.floor(session.bet * 1.5)) + " WHERE id = " + con.escape(message.member.id)); 
+                                                    con.query("UPDATE user SET money = money +" + con.escape(Math.floor(session.bet * 1.5)) + " WHERE id = " + con.escape(session.id)); 
                                                 } else if (playerTotal > dealerTotal && dealerTotal >= 16 && dealerTotal < 21) {
                                                     //pelaaja voittaa
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     console.log("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
-                                                    con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.id)); 
+                                                    con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id); 
                                                 } else if (playerTotal === dealerTotal && dealerTotal >= 16) {
                                                     //rahojen palautus
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
@@ -256,7 +256,7 @@ b.on('message', message => {
                                                     message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
                                                     message.reply("Hävisit jakajalle " + session.bet + " kolikkoa.");
                                                     console.log("Hävisit jakajalle " + session.bet + " kolikkoa.");
-                                                    con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.id)); 
+                                                    con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
 
                                                     }
                                                 }
