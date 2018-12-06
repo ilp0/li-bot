@@ -228,7 +228,7 @@ b.on('message', message => {
                                                 handString += card + " ";
                                                 playerTotal += card;
                                             });
-                                            message.reply("\nYour hand: " + handString + " = " + playerTotal + "\n Dealers hand: " + dealerHandString + " = " + dealerTotal);
+                                            message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\n Jakajan käsi: " + dealerHandString + " = " + dealerTotal);
                                             while (dealerTotal < 16) {
                                                 //hit
                                                 newCard = bjDeck[Math.floor(Math.random() * bjDeck.length)];
@@ -237,30 +237,30 @@ b.on('message', message => {
                                                 dealerHandString += newCard + " ";
                                                 if (dealerTotal > 21 && playerTotal !== 21) {
                                                     //dealer loses
-                                                    message.reply("\nYour hand: " + handString + " = " + playerTotal + "\nDealers hand: " + dealerHandString + " = " + dealerTotal);
+                                                    message.reply("\n hand: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
                                                     message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.id)); 
                                                 } else if (playerTotal === 21){
                                                     //BLACKJACK
-                                                    message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
+                                                    message.reply("\n hand: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
                                                     message.reply("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " KOLIKKOA!");
                                                     console.log("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " KOLIKKOA!");
                                                     con.query("UPDATE user SET money = money +" + con.escape(Math.floor(session.bet * 1.5)) + " WHERE id = " + con.escape(session.id)); 
                                                 } else if (playerTotal > dealerTotal && dealerTotal >= 16 && dealerTotal <= 21) {
                                                     //pelaaja voittaa
-                                                    message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
+                                                    message.reply("\n hand: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
                                                     message.reply("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     console.log("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
                                                     con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
                                                 } else if (playerTotal === dealerTotal && dealerTotal >= 16) {
                                                     //rahojen palautus
-                                                    message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
+                                                    message.reply("\n hand: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
                                                     message.reply("Tasapeli. Rahojen palautus.")
                                                     console.log("Tasapeli. Rahojen palautus.")
-                                                } else if (playerTotal < dealerTotal && dealerTotal >= 16) {
+                                                } else if (playerTotal < dealerTotal && dealerTotal >= 16 && dealerTotal <= 21) {
                                                     //pelaaja häviää
-                                                    message.reply("\nYour hand: " + handString + "\nDealers hand: " + dealerHandString);
+                                                    message.reply("\n hand: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
                                                     message.reply("Hävisit jakajalle " + session.bet + " kolikkoa.");
                                                     console.log("Hävisit jakajalle " + session.bet + " kolikkoa.");
                                                     con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
