@@ -66,7 +66,7 @@ b.on('message', message => {
                 break;
             //help
             case 'help':
-                var text = "```AVAILABLE COMMANDS: \n !j -- random j quote \n !rr -- russian roulette game \n !rand <input> -- random number generator \n !kasino <command> <bet-size> -- kasino games \n         register\n         saldo\n         flip\n         bj\n !help -- shows this message``` \nBot source code available @ https://github.com/ilp0/li-bot";
+                var text = "```AVAILABLE COMMANDS: \n !j -- random j quote \n !rr -- russian roulette game \n !rand <input> -- random number generator \n !k <command> <bet-size> -- kasino games \n    register\n    saldo\n    flip\n    bj\n    slots\n !help -- shows this message``` \nBot source code available @ https://github.com/ilp0/li-bot";
                 message.reply(text);
                 break;
             //play ben shapiro
