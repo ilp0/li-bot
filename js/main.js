@@ -359,6 +359,8 @@ b.on('message', message => {
                                                     break;
                                                 }
                                             }
+                                        } else {
+                                            message.reply("Ei voittoa :(");
                                         }
                                         }, 1000);
                                     })
