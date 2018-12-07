@@ -31,7 +31,7 @@ b.on('ready', () => {
     eArr[0] = b.emojis.find(emoji => emoji.name === "kunnonkaarisuu");
     eArr[1] = b.emojis.find(emoji => emoji.name === "panther");
     eArr[1] = b.emojis.find(emoji => emoji.name === "risti");
-    eArr[1] = b.emojis.find(emoji => emoji.name === "panther");
+    eArr[1] = b.emojis.find(emoji => emoji.name === "kaori");
 });
 //on message
 b.on('message', message => {
@@ -325,11 +325,47 @@ b.on('message', message => {
                                        .then((mesg) => {
                                         setTimeout(function (){
                                             mesg.edit("Result:\n" + row[0] + " " +  row[1] + " " + row[2]);
-                                        }, 2000);
+                                        }, 1000);
                                     })
-                                   }, 3000)
+                                   }, 1000)
                                });
+                               if (row[0] === row[1]){
+                                    if(row[0] === row[2]){
+                                    // kolme samaa
+                                    switch(row[0]){
+                                        case eArr[0]:
+                                        message.reply("HAPPY BONUS! PANOS X 8");
+                                        break;
+                                        case eArr[1]:
+                                        message.reply("JUST PANTHER " + eArr[1] + " PANOS X 15");
+                                        break;
+                                        case eArr[2]:
+                                        message.reply("SUPER RISTI VOITTO! PANOS X 10");
+                                        break;
+                                        case eArr[3]:
+                                        message.reply("SUPER ANIME VOITTO!!!! PANOS X 25");
+                                        break;
+                                    }
+                                } else {
+                                    // kaksi samaa
+                                    switch(row[0]){
+                                        case eArr[0]:
+                                        message.reply("Sentti on miljoonan alku. PANOS X 1");
+                                        break;
+                                        case eArr[1]:
+                                        message.reply("Pientä pantheria. " + eArr[1] + " PANOS X 4");
+                                        break;
+                                        case eArr[2]:
+                                        message.reply(eArr[2] + eArr[2] + " PANOS X 3");
+                                        break;
+                                        case eArr[3]:
+                                        message.reply("SMALL ANIME VOITTO! PANOS X 10");
+                                        break;
+                                    }
+                                }
+                               }
 
+                               }
                             } else {
                                 message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " kolikkoa");
                             }
