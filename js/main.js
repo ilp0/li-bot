@@ -32,6 +32,8 @@ b.on('ready', () => {
     eArr[1] = b.emojis.find(emoji => emoji.name === "panther");
     eArr[2] = b.emojis.find(emoji => emoji.name === "risti");
     eArr[3] = b.emojis.find(emoji => emoji.name === "kaori");
+    eArr[4] = b.emojis.find(emoji => emoji.name === "peek");
+    eArr[5] = b.emojis.find(emoji => emoji.name === "coolboy");
 });
 //on message
 b.on('message', message => {
@@ -341,6 +343,12 @@ b.on('message', message => {
                                                     case eArr[3]:
                                                     message.reply("SUPER ANIME VOITTO!!!! PANOS X 25");
                                                     break;
+                                                    case eArr[4]:
+                                                    message.reply("Uskomaton pleikkarivässykkä bonus PANOS X 10");
+                                                    break;
+                                                    case eArr[5]:
+                                                    message.reply("(jac)XBOT! PANOS X 30");
+                                                    break;
                                                 }
                                             } else {
                                                 // kaksi samaa
@@ -355,7 +363,13 @@ b.on('message', message => {
                                                     message.reply(eArr[2] + eArr[2] + " PANOS X 3");
                                                     break;
                                                     case eArr[3]:
-                                                    message.reply("SMALL ANIME VOITTO! PANOS X 10");
+                                                    message.reply("SMALL ANIME VOITTO! PANOS X 7");
+                                                    break;
+                                                    case eArr[4]:
+                                                    message.reply("Pikku pleikkarivässykkä bonus PANOS X 3");
+                                                    break;
+                                                    case eArr[5]:
+                                                    message.reply("PIENI (jac)XBOT! PANOS X 10");
                                                     break;
                                                 }
                                             }
