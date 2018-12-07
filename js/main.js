@@ -11,7 +11,7 @@ const prefix = "!";
 //card deck for blackjack
 const bjDeck = [2,3,4,5,6,7,8,9,10,10,10,10,11];
 
-const emojis = [":risti:", ":panther:", ":kunnonkaarisuu:", ":kaori:"]
+const eArr = [];
 
 var bjSessions = [{}];
 //logger stuff
@@ -27,6 +27,11 @@ var b = new Discord.Client();
 //login
 b.on('ready', () => {
     logger.info('Connected to server');
+    //init emojis
+    eArr[0] = b.emojis.find(emoji => emoji.name === "kunnonkaarisuu");
+    eArr[1] = b.emojis.find(emoji => emoji.name === "panther");
+    eArr[1] = b.emojis.find(emoji => emoji.name === "risti");
+    eArr[1] = b.emojis.find(emoji => emoji.name === "panther");
 });
 //on message
 b.on('message', message => {
@@ -311,9 +316,9 @@ b.on('message', message => {
                                */
                                let row = [];
                                for (let i = 0; i < 3; i++){
-                                row.push(emojis[Math.floor(Math.random() * emojis.length)]);
+                                row.push(eArr[Math.floor(Math.random() * eArr.length)]);
                                }
-                               message.reply("Result:\n" + row[1] + " X X")
+                               message.reply("Result:\n" + row[0] + " X X")
                                .then((msg) => {
                                    setTimeout(function (){
                                        msg.edit("Result:\n" + row[0] + " " +  row[1] + " X")
