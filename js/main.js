@@ -364,8 +364,6 @@ b.on('message', message => {
                                     }
                                 }
                                }
-
-                               }
                             } else {
                                 message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " kolikkoa");
                             }
