@@ -30,8 +30,8 @@ b.on('ready', () => {
     //init emojis
     eArr[0] = b.emojis.find(emoji => emoji.name === "kunnonkaarisuu");
     eArr[1] = b.emojis.find(emoji => emoji.name === "panther");
-    eArr[1] = b.emojis.find(emoji => emoji.name === "risti");
-    eArr[1] = b.emojis.find(emoji => emoji.name === "kaori");
+    eArr[2] = b.emojis.find(emoji => emoji.name === "risti");
+    eArr[3] = b.emojis.find(emoji => emoji.name === "kaori");
 });
 //on message
 b.on('message', message => {
