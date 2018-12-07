@@ -11,6 +11,8 @@ const prefix = "!";
 //card deck for blackjack
 const bjDeck = [2,3,4,5,6,7,8,9,10,10,10,10,11];
 
+const emojis = [":risti:", ":panther:", ":kunnonkaarisuu:", ":kaori:"]
+
 var bjSessions = [{}];
 //logger stuff
 logger.remove(logger.transports.Console);
@@ -288,6 +290,49 @@ b.on('message', message => {
                             break;
                         }
                     }
+                    break;
+                    case "slots":
+                    bet = parseInt(args[1], 10);
+                    con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+                        if (!err && result.length != 0) {
+                            if(result[0].money >= bet && bet > 0){
+                               //slots koodit
+                               /*
+                               yhdistelmät:
+                               :) :) X = rahat takaisin
+                               :) :) :) = 5x rahat
+                               :D X X = rahat takaisin
+                               :D :D X = 4x rahat
+                               :D :D :D = 20x rahat
+                               XD XD X = 8x rahat
+                               XD XD XD = 25x rahat
+                               gold gold gold = 50x rahat
+                               Jokeri = wild 
+                               */
+                               let row = [];
+                               for (let i = 0; i < 3; i++){
+                                row.push(emojis[Math.floor(Math.random() * emojis.length)]);
+                               }
+                               message.reply("Result:\n" + row[1] + " X X")
+                               .then((msg) => {
+                                   setTimeout(function (){
+                                       msg.edit("Result:\n" + row[0] + " " +  row[1] + " X")
+                                       .then((mesg) => {
+                                        setTimeout(function (){
+                                            mesg.edit("Result:\n" + row[0] + " " +  row[1] + " " + row[2]);
+                                        }, 2000);
+                                    })
+                                   }, 3000)
+                               });
+
+                            } else {
+                                message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " kolikkoa");
+                            }
+                            
+                        } else {
+                            message.reply("Error! Onko sinulla varmasti pelitili?");
+                        }
+                    });
                     break;
                     default: 
                         message.reply("Virheellinen kasino-komento. Yritä uudelleen.");
