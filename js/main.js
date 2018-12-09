@@ -333,10 +333,10 @@ b.on('message', message => {
                                */
                               let row = Create2DArray(2);
                                for (let i = 0; i < 3; i++){
-                                row[0][i] = eArr[Math.floor(Math.random() * length)]
-                                row[1][i] = eArr[Math.floor(Math.random() * length)]
-                                row[2][i] = eArr[Math.floor(Math.random() * length)]
-                               }eArr.
+                                row[0][i] = eArr[Math.floor(Math.random() * eArr.length)];
+                                row[1][i] = eArr[Math.floor(Math.random() * eArr.length)];
+                                row[2][i] = eArr[Math.floor(Math.random() * eArr.length)];
+                               }
                                message.reply("Result:\n" + row[0][0] + " X X\n" + row[0][1] + " X X\n" + row[0][2] + " X X\n")
                                .then((msg) => {
                                    setTimeout(function (){
