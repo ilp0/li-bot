@@ -331,69 +331,75 @@ b.on('message', message => {
                                gold gold gold = 50x rahat
                                Jokeri = wild 
                                */
-                               let row = [];
+                              let row = Create2DArray(2);
                                for (let i = 0; i < 3; i++){
-                                row.push(eArr[Math.floor(Math.random() * eArr.length)]);
+                                row[0].push(eArr[Math.floor(Math.random() * eArr.length)]);
+                                row[1].push(eArr[Math.floor(Math.random() * eArr.length)]);
+                                row[2].push(eArr[Math.floor(Math.random() * eArr.length)]);
                                }
-                               message.reply("Result:\n" + row[0] + " X X")
+                               message.reply("Result:\n" + row[0][0] + " X X\n" + row[0][1] + " X X\n" + row[0][2] + " X X\n")
                                .then((msg) => {
                                    setTimeout(function (){
-                                       msg.edit("Result:\n" + row[0] + " " +  row[1] + " X")
+                                       msg.edit(("Result:\n" + row[0][0] + " " + row[1][0] + " X\n" + row[0][1] + " " + row[1][1] + " X\n" + row[0][2] + " " + row[1][2] + " X\n")
                                        .then((mesg) => {
                                         setTimeout(function (){
-                                            mesg.edit("Result:\n" + row[0] + " " +  row[1] + " " + row[2]);
-                                            if (row[0] === row[1]){
-                                                if(row[0] === row[2]){
-                                                // kolme samaa
-                                                switch(row[0]){
-                                                    case eArr[0]:
-                                                    message.reply("HAPPY BONUS! PANOS X 8");
-                                                    break;
-                                                    case eArr[1]:
-                                                    message.reply("JUST PANTHER " + eArr[1] + " PANOS X 15");
-                                                    break;
-                                                    case eArr[2]:
-                                                    message.reply("SUPER RISTI VOITTO! PANOS X 10");
-                                                    break;
-                                                    case eArr[3]:
-                                                    message.reply("SUPER ANIME VOITTO!!!! PANOS X 25");
-                                                    break;
-                                                    case eArr[4]:
-                                                    message.reply("Uskomaton pleikkarivässykkä bonus PANOS X 10");
-                                                    break;
-                                                    case eArr[5]:
-                                                    message.reply("(jac)XBOT! PANOS X 30");
-                                                    break;
+                                            mesg.edit("Result:\n" + row[0][0] + " " + row[1][0] + " " + row[2][0] + "\n" + row[0][1] + " " + row[1][1] + " " + row[2][1] + "\n" + row[0][2] + " " + row[1][2] + " " + row[2][2] + "\n");
+                                            for(let i = 0; i<3; i++){
+                                                if (row[i][0] === row[i][1]){
+                                                    if(row[i][0] === row[i][2]){
+                                                    // kolme samaa
+                                                    switch(row[i][0]){
+                                                        case eArr[0]:
+                                                        message.reply("HAPPY BONUS! PANOS X 8");
+                                                        break;
+                                                        case eArr[1]:
+                                                        message.reply("JUST PANTHER " + eArr[1] + " PANOS X 15");
+                                                        break;
+                                                        case eArr[2]:
+                                                        message.reply("SUPER RISTI VOITTO! PANOS X 10");
+                                                        break;
+                                                        case eArr[3]:
+                                                        message.reply("SUPER ANIME VOITTO!!!! PANOS X 25");
+                                                        break;
+                                                        case eArr[4]:
+                                                        message.reply("Uskomaton pleikkarivässykkä bonus PANOS X 10");
+                                                        break;
+                                                        case eArr[5]:
+                                                        message.reply("(jac)XBOT! PANOS X 30");
+                                                        break;
+                                                    }
+                                                } else {
+                                                    // kaksi samaa
+                                                    switch(row[i][0]){
+                                                        case eArr[0]:
+                                                        message.reply("Sentti on miljoonan alku. PANOS X 1");
+                                                        break;
+                                                        case eArr[1]:
+                                                        message.reply("Pientä pantheria. " + eArr[1] + " PANOS X 4");
+                                                        break;
+                                                        case eArr[2]:
+                                                        message.reply(eArr[2] + eArr[2] + " PANOS X 3");
+                                                        break;
+                                                        case eArr[3]:
+                                                        message.reply("SMALL ANIME VOITTO! PANOS X 7");
+                                                        break;
+                                                        case eArr[4]:
+                                                        message.reply("Pikku pleikkarivässykkä bonus PANOS X 3");
+                                                        break;
+                                                        case eArr[5]:
+                                                        message.reply("PIENI (jac)XBOT! PANOS X 10");
+                                                        break;
+                                                    }
                                                 }
                                             } else {
-                                                // kaksi samaa
-                                                switch(row[0]){
-                                                    case eArr[0]:
-                                                    message.reply("Sentti on miljoonan alku. PANOS X 1");
-                                                    break;
-                                                    case eArr[1]:
-                                                    message.reply("Pientä pantheria. " + eArr[1] + " PANOS X 4");
-                                                    break;
-                                                    case eArr[2]:
-                                                    message.reply(eArr[2] + eArr[2] + " PANOS X 3");
-                                                    break;
-                                                    case eArr[3]:
-                                                    message.reply("SMALL ANIME VOITTO! PANOS X 7");
-                                                    break;
-                                                    case eArr[4]:
-                                                    message.reply("Pikku pleikkarivässykkä bonus PANOS X 3");
-                                                    break;
-                                                    case eArr[5]:
-                                                    message.reply("PIENI (jac)XBOT! PANOS X 10");
-                                                    break;
-                                                }
+                                                message.reply("Ei voittoa :(");
                                             }
-                                        } else {
-                                            message.reply("Ei voittoa :(");
                                         }
+                                    
+                                            
                                         }, 1000);
                                     })
-                                   }, 1000)
+                                    },1000)
                                });
                             } else {
                                 message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " kolikkoa");
@@ -450,4 +456,13 @@ function sleep(milliseconds) {
         break;
       }
     }
+  }
+function Create2DArray(rows) {
+    var arr = [];
+  
+    for (var i=0;i<rows;i++) {
+       arr[i] = [];
+    }
+  
+    return arr;
   }
