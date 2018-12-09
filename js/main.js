@@ -428,10 +428,11 @@ b.on('message', message => {
                                             if (!err && res.length != 0) {
                                                 saldoString = "\nSaldo: " + res[0].money + " li-coinia";
                                             }
-                                        });
-                                        finalString += saldoString;
-                                        mesg.edit(finalString);
-                                            
+                                        })
+                                        .then(() => {
+                                            finalString += saldoString;
+                                            mesg.edit(finalString);
+                                        })
                                         }, 1000);
                                     });
                                     },1000)
