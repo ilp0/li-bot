@@ -34,6 +34,7 @@ b.on('ready', () => {
     eArr[3] = b.emojis.find(emoji => emoji.name === "kaori");
     eArr[4] = b.emojis.find(emoji => emoji.name === "peek");
     eArr[5] = b.emojis.find(emoji => emoji.name === "coolboy");
+    eArr[6] = b.emojis.find(emoji => emoji.name === "supernut");
 });
 //on message
 b.on('message', message => {
@@ -383,6 +384,11 @@ b.on('message', message => {
                                                         con.query("UPDATE user SET money = money +" + (con.escape(bet) * 20) + " WHERE id = " + con.escape(message.member.id)); 
 
                                                         break;
+                                                        case eArr[6]:
+                                                        finalString += ("SUPERNUT SUPER VOITTO! " + (bet * 25) + " li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 25) + " WHERE id = " + con.escape(message.member.id)); 
+
+                                                        break;
                                                     }
                                                 } else {
                                                     // kaksi samaa
@@ -410,6 +416,11 @@ b.on('message', message => {
                                                         case eArr[5]:
                                                         finalString += ("PIENI (jac)XBOT! " + (bet * 6) + " li-coinia\n");
                                                         con.query("UPDATE user SET money = money +" + (con.escape(bet) * 6) + " WHERE id = " + con.escape(message.member.id)); 
+                                                        break;
+                                                        case eArr[6]:
+                                                        finalString += ("SUPERNUT MEDIUM VOITTO! " + (bet * 8) + " li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 8) + " WHERE id = " + con.escape(message.member.id)); 
+
                                                         break;
                                                     }
                                                 }
