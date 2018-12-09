@@ -337,13 +337,19 @@ b.on('message', message => {
                                 row[1][i] = eArr[Math.floor(Math.random() * eArr.length)];
                                 row[2][i] = eArr[Math.floor(Math.random() * eArr.length)];
                                }
-                               message.reply("Result:\n" + row[0][0] + " X X\n" + row[0][1] + " X X\n" + row[0][2] + " X X\n")
+                               message.reply("Result:\n"    + row[0][0] + " X X\n"
+                                                            + row[1][0] + " X X\n" 
+                                                            + row[2][0] + " X X\n")
                                .then((msg) => {
                                    setTimeout(function (){
-                                       msg.edit("Result:\n" + row[0][0] + " " + row[1][0] + " X\n" + row[0][1] + " " + row[1][1] + " X\n" + row[0][2] + " " + row[1][2] + " X\n")
+                                       msg.edit("Result:\n" + row[0][0] + " " + row[0][1] + " X\n"
+                                                            + row[1][0] + " " + row[1][1] + " X\n"
+                                                            + row[2][0] + " " + row[2][1] + " X\n")
                                        .then((mesg) => {
                                         setTimeout(function (){
-                                            mesg.edit("Result:\n" + row[0][0] + " " + row[1][0] + " " + row[2][0] + "\n" + row[0][1] + " " + row[1][1] + " " + row[2][1] + "\n" + row[0][2] + " " + row[1][2] + " " + row[2][2] + "\n");
+                                            mesg.edit("Result:\n"   + row[0][0] + " " + row[0][1] + " " + row[0][2] + "\n" 
+                                                                    + row[1][0] + " " + row[1][1] + " " + row[1][2] + "\n" 
+                                                                    + row[2][0] + " " + row[2][1] + " " + row[2][2] + "\n");
                                             for(let i = 0; i<3; i++){
                                                 if (row[i][0] === row[i][1]){
                                                     if(row[i][0] === row[i][2]){
