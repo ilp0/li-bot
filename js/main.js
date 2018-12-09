@@ -400,15 +400,16 @@ b.on('message', message => {
                                                     }
                                                 }
                                             }
-                                            if(noWin) {
-                                                finalString += ("Ei voittoa :(\n");
-                                            }
-                                            let saldoString = "\nSaldo: " + result[0].money + " li-coinia";
-                                            finalString += saldoString;
-                                            mesg.edit(finalString);
+                                            
                                             
                                         }
-                                    
+                                        
+                                        if(noWin) {
+                                            finalString += ("Ei voittoa :(\n");
+                                        }
+                                        let saldoString = "\nSaldo: " + result[0].money + " li-coinia";
+                                        finalString += saldoString;
+                                        mesg.edit(finalString);
                                             
                                         }, 1000);
                                     });
