@@ -398,28 +398,28 @@ b.on('message', message => {
                                                         con.query("UPDATE user SET money = money +" + (con.escape(bet) * 1) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[1]:
-                                                        finalString += ("Pientä pantheria. " + eArr[1] +  " " + (bet * 3) + " li-coinia\n");
-                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 3) + " WHERE id = " + con.escape(message.member.id)); 
+                                                        finalString += ("Pientä pantheria. " + eArr[1] +  " " + Math.floor(bet * 1.5) + " li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + Math.floor(con.escape(bet) * 1.5) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[2]:
                                                         finalString += ("Pieni risti voitto! " + (bet * 2) + " li-coinia\n");;
                                                         con.query("UPDATE user SET money = money +" + (con.escape(bet) * 2) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[3]:
-                                                        finalString += ("SMALL ANIME VOITTO! " + (bet * 5) + " li-coinia\n");;
+                                                        finalString += ("SMALL ANIME VOITTO! " + Math.floor(bet * 2.5) + " li-coinia\n");;
                                                         con.query("UPDATE user SET money = money +" + (con.escape(bet) * 5) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[4]:
-                                                        finalString += ("Pikku pleikkarivässykkä bonus. " + (bet * 3) + " li-coinia\n");
-                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 3) + " WHERE id = " + con.escape(message.member.id)); 
+                                                        finalString += ("Pikku pleikkarivässykkä bonus. " + (bet * 2) + " li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 2) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[5]:
-                                                        finalString += ("PIENI (jac)XBOT! " + (bet * 6) + " li-coinia\n");
-                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 6) + " WHERE id = " + con.escape(message.member.id)); 
+                                                        finalString += ("PIENI (jac)XBOT! " + (bet * 3) + " li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 3) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[6]:
-                                                        finalString += ("SUPERNUT MEDIUM VOITTO! " + (bet * 8) + " li-coinia\n");
-                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 8) + " WHERE id = " + con.escape(message.member.id)); 
+                                                        finalString += ("SUPERNUT MEDIUM VOITTO! " + (bet * 5) + " li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 5) + " WHERE id = " + con.escape(message.member.id)); 
 
                                                         break;
                                                     }
