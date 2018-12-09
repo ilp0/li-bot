@@ -137,7 +137,7 @@ b.on('message', message => {
                         con.query("SELECT * FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
                             if (!err && result.length == 0){
                                 con.query("INSERT INTO user (id, name, money) VALUES (" + con.escape(message.member.id) + ", " + con.escape(message.member.displayName) + ", 500)", (err, result, field) => {
-                                    message.reply("Pelitili luotu! Rekisteröimisbonus 500 kolikkoa!")
+                                    message.reply("Pelitili luotu! Rekisteröimisbonus 500 li-coinia!")
                                 });
                             } else {
                                 message.reply("Olet jo rekisteröitynyt");
@@ -149,7 +149,7 @@ b.on('message', message => {
                     case 'saldo':
                         con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
                             if (!err && result.length != 0) {
-                                message.reply("Pelitililläsi on " + result[0].money + " kolikkoa");
+                                message.reply("Pelitililläsi on " + result[0].money + " li-coinia");
                             } else {
                                 message.reply("Error! Onko sinulla varmasti pelitili?");
                             }
@@ -163,18 +163,18 @@ b.on('message', message => {
                                     var coin = Math.floor(Math.random() * 2);
                                     var side = Math.floor(Math.random() * 50);
                                     if (side === 25) {
-                                        message.reply("Kolikko tippui sivulleen. Hävisit " + (bet) + " kolikkoa. Saldosi on "+ (result[0].money - bet));
+                                        message.reply("Kolikko tippui sivulleen. Hävisit " + (bet) + " li-coinia. Saldosi on "+ (result[0].money - bet));
                                         con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id));
 
                                     } else if (coin === 0) {
-                                        message.reply("Kruuna, voitit " + (bet*2) + " kolikkoa. Saldosi on " + (result[0].money + bet));
+                                        message.reply("Kruuna, voitit " + (bet*2) + " li-coinia. Saldosi on " + (result[0].money + bet));
                                         con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id)); 
                                     } else {
-                                        message.reply("Klaava, hävisit "+ bet + " kolikkoa. Saldosi on " + (result[0].money - bet));
+                                        message.reply("Klaava, hävisit "+ bet + " li-coinia. Saldosi on " + (result[0].money - bet));
                                         con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id));
                                     } 
                                 } else {
-                                    message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " kolikkoa");
+                                    message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " li-coinia");
                                 }
                                 
                             } else {
@@ -200,7 +200,7 @@ b.on('message', message => {
                                             let gameStatus = "active";
                                             bjSessions.push({id: message.member.id, bet: bet, hand: hand, dealerHand: dealerHand, status: gameStatus });
                                         } else {
-                                            message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " kolikkoa");
+                                            message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " li-coinia");
                                         }
                                     } else {
                                         message.reply("Error! Onko sinulla varmasti pelitili?");
@@ -238,7 +238,7 @@ b.on('message', message => {
                                                 }
                                             });
                                             if(total > 21){
-                                                message.reply("Yli 21. Hävisit " + session.bet + " kolikkoa.");
+                                                message.reply("Yli 21. Hävisit " + session.bet + " li-coinia.");
                                                 session.gameStatus = "inactive";
                                                 con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
                                                 bjSessions.splice(i, 1);
@@ -275,20 +275,20 @@ b.on('message', message => {
                                                 if (dealerTotal > 21 && playerTotal !== 21) {
                                                     //dealer loses
                                                     message.reply("\n hand: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
-                                                    message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
-                                                    console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " kolikkoa.");
+                                                    message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " li-coinia.");
+                                                    console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " li-coinia.");
                                                     con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.id)); 
                                                 } else if (playerTotal === 21){
                                                     //BLACKJACK
                                                     message.reply("\n hand: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
-                                                    message.reply("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " KOLIKKOA!");
-                                                    console.log("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " KOLIKKOA!");
+                                                    message.reply("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " li-coinia!");
+                                                    console.log("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " li-coinia!");
                                                     con.query("UPDATE user SET money = money +" + con.escape(Math.floor(session.bet * 1.5)) + " WHERE id = " + con.escape(session.id)); 
                                                 } else if (playerTotal > dealerTotal && dealerTotal >= 16 && dealerTotal <= 21) {
                                                     //pelaaja voittaa
                                                     message.reply("\n hand: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
-                                                    message.reply("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
-                                                    console.log("Onnea! Voitit " + (session.bet * 2) + " kolikkoa.");
+                                                    message.reply("Onnea! Voitit " + (session.bet * 2) + " li-coinia.");
+                                                    console.log("Onnea! Voitit " + (session.bet * 2) + " li-coinia.");
                                                     con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
                                                 } else if (playerTotal === dealerTotal && dealerTotal >= 16) {
                                                     //rahojen palautus
@@ -298,8 +298,8 @@ b.on('message', message => {
                                                 } else if (playerTotal < dealerTotal && dealerTotal >= 16 && dealerTotal <= 21) {
                                                     //pelaaja häviää
                                                     message.reply("\n hand: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
-                                                    message.reply("Hävisit jakajalle " + session.bet + " kolikkoa.");
-                                                    console.log("Hävisit jakajalle " + session.bet + " kolikkoa.");
+                                                    message.reply("Hävisit jakajalle " + session.bet + " li-coinia.");
+                                                    console.log("Hävisit jakajalle " + session.bet + " li-coinia.");
                                                     con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
 
                                                     }
@@ -347,59 +347,66 @@ b.on('message', message => {
                                                             + row[2][0] + " " + row[2][1] + " X\n")
                                        .then((mesg) => {
                                         setTimeout(function (){
-                                            mesg.edit("Result:\n"   + row[0][0] + " " + row[0][1] + " " + row[0][2] + "\n" 
-                                                                    + row[1][0] + " " + row[1][1] + " " + row[1][2] + "\n" 
-                                                                    + row[2][0] + " " + row[2][1] + " " + row[2][2] + "\n");
+                                            let finalString = "Result:\n"   + row[0][0] + " " + row[0][1] + " " + row[0][2] + "\n" 
+                                                                            + row[1][0] + " " + row[1][1] + " " + row[1][2] + "\n" 
+                                                                            + row[2][0] + " " + row[2][1] + " " + row[2][2] + "\n";
+                                            let noWin = true;
                                             for(let i = 0; i<3; i++){
                                                 if (row[i][0] === row[i][1]){
+                                                    noWin = false;
                                                     if(row[i][0] === row[i][2]){
                                                     // kolme samaa
                                                     switch(row[i][0]){
                                                         case eArr[0]:
-                                                        message.reply("HAPPY BONUS! PANOS X 8");
+                                                        finalString += ("HAPPY BONUS! PANOS X 8\n");
                                                         break;
                                                         case eArr[1]:
-                                                        message.reply("JUST PANTHER " + eArr[1] + " PANOS X 15");
+                                                        finalString += ("JUST PANTHER " + eArr[1] + " PANOS X 15\n");
                                                         break;
                                                         case eArr[2]:
-                                                        message.reply("SUPER RISTI VOITTO! PANOS X 10");
+                                                        finalString += ("SUPER RISTI VOITTO! PANOS X 10\n");
                                                         break;
                                                         case eArr[3]:
-                                                        message.reply("SUPER ANIME VOITTO!!!! PANOS X 25");
+                                                        finalString += ("SUPER ANIME VOITTO!!!! PANOS X 25\n");
                                                         break;
                                                         case eArr[4]:
-                                                        message.reply("Uskomaton pleikkarivässykkä bonus PANOS X 10");
+                                                        finalString += ("Uskomaton pleikkarivässykkä bonus PANOS X 10\n");
                                                         break;
                                                         case eArr[5]:
-                                                        message.reply("(jac)XBOT! PANOS X 30");
+                                                        finalString += ("(jac)XBOT! PANOS X 30\n");
                                                         break;
                                                     }
                                                 } else {
                                                     // kaksi samaa
                                                     switch(row[i][0]){
                                                         case eArr[0]:
-                                                        message.reply("Sentti on miljoonan alku. PANOS X 1");
+                                                        finalString += ("Sentti on miljoonan alku. PANOS X 1\n");
                                                         break;
                                                         case eArr[1]:
-                                                        message.reply("Pientä pantheria. " + eArr[1] + " PANOS X 4");
+                                                        finalString += ("Pientä pantheria. " + eArr[1] + " PANOS X 4\n");
                                                         break;
                                                         case eArr[2]:
-                                                        message.reply(eArr[2] + eArr[2] + " PANOS X 3");
+                                                        finalString += (eArr[2] + eArr[2] + " PANOS X 3\n");
                                                         break;
                                                         case eArr[3]:
-                                                        message.reply("SMALL ANIME VOITTO! PANOS X 7");
+                                                        finalString += ("SMALL ANIME VOITTO! PANOS X 7\n");
                                                         break;
                                                         case eArr[4]:
-                                                        message.reply("Pikku pleikkarivässykkä bonus PANOS X 3");
+                                                        finalString += ("Pikku pleikkarivässykkä bonus PANOS X 3\n");
                                                         break;
                                                         case eArr[5]:
-                                                        message.reply("PIENI (jac)XBOT! PANOS X 10");
+                                                        finalString += ("PIENI (jac)XBOT! PANOS X 10\n");
                                                         break;
                                                     }
                                                 }
-                                            } else {
-                                                message.reply("Ei voittoa :(");
                                             }
+                                            if(noWin) {
+                                                finalString += ("Ei voittoa :(\n");
+                                            }
+                                            let saldoString = "\nSaldo: " + result[0].money + " li-coinia";
+                                            finalString += saldoString;
+                                            mesg.edit(finalString);
+                                            
                                         }
                                     
                                             
@@ -408,7 +415,7 @@ b.on('message', message => {
                                     },1000)
                                });
                             } else {
-                                message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " kolikkoa");
+                                message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " li-coinia");
                             }
                             
                         } else {
