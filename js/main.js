@@ -331,7 +331,7 @@ b.on('message', message => {
                                gold gold gold = 50x rahat
                                Jokeri = wild 
                                */
-                              let row = Create2DArray(2);
+                              let row = Create2DArray(3);
                                for (let i = 0; i < 3; i++){
                                 row[0][i] = eArr[Math.floor(Math.random() * eArr.length)];
                                 row[1][i] = eArr[Math.floor(Math.random() * eArr.length)];
