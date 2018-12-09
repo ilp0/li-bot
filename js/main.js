@@ -340,7 +340,7 @@ b.on('message', message => {
                                message.reply("Result:\n" + row[0][0] + " X X\n" + row[0][1] + " X X\n" + row[0][2] + " X X\n")
                                .then((msg) => {
                                    setTimeout(function (){
-                                       msg.edit(("Result:\n" + row[0][0] + " " + row[1][0] + " X\n" + row[0][1] + " " + row[1][1] + " X\n" + row[0][2] + " " + row[1][2] + " X\n")
+                                       msg.edit("Result:\n" + row[0][0] + " " + row[1][0] + " X\n" + row[0][1] + " " + row[1][1] + " X\n" + row[0][2] + " " + row[1][2] + " X\n")
                                        .then((mesg) => {
                                         setTimeout(function (){
                                             mesg.edit("Result:\n" + row[0][0] + " " + row[1][0] + " " + row[2][0] + "\n" + row[0][1] + " " + row[1][1] + " " + row[2][1] + "\n" + row[0][2] + " " + row[1][2] + " " + row[2][2] + "\n");
@@ -398,7 +398,7 @@ b.on('message', message => {
                                     
                                             
                                         }, 1000);
-                                    }))
+                                    });
                                     },1000)
                                });
                             } else {
