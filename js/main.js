@@ -358,44 +358,58 @@ b.on('message', message => {
                                                     // kolme samaa
                                                     switch(row[i][0]){
                                                         case eArr[0]:
-                                                        finalString += ("HAPPY BONUS! PANOS X 8\n");
+                                                        finalString += ("HAPPY BONUS! " + (bet * 8) + "li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 8) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[1]:
-                                                        finalString += ("JUST PANTHER " + eArr[1] + " PANOS X 15\n");
+                                                        finalString += ("JUST PANTHER " + eArr[1] + " " + (bet * 12) + "li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 12) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[2]:
-                                                        finalString += ("SUPER RISTI VOITTO! PANOS X 10\n");
+                                                        finalString += ("SUPER RISTI VOITTO! " + (bet * 10) + "li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 10) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[3]:
-                                                        finalString += ("SUPER ANIME VOITTO!!!! PANOS X 25\n");
+                                                        finalString += ("SUPER ANIME VOITTO!!!! " + (bet * 15) + "li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 15) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[4]:
-                                                        finalString += ("Uskomaton pleikkarivässykkä bonus PANOS X 10\n");
+                                                        finalString += ("Uskomaton pleikkarivässykkä bonus! " + (bet * 10) + "li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 10) + " WHERE id = " + con.escape(message.member.id)); 
+
                                                         break;
                                                         case eArr[5]:
-                                                        finalString += ("(jac)XBOT! PANOS X 30\n");
+                                                        finalString += ("(jac)XBOT! " + (bet * 20) + "li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 20) + " WHERE id = " + con.escape(message.member.id)); 
+
                                                         break;
                                                     }
                                                 } else {
                                                     // kaksi samaa
                                                     switch(row[i][0]){
                                                         case eArr[0]:
-                                                        finalString += ("Sentti on miljoonan alku. PANOS X 1\n");
+                                                        finalString += ("Sentti on miljoonan alku. " + (bet * 1) + "li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 1) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[1]:
-                                                        finalString += ("Pientä pantheria. " + eArr[1] + " PANOS X 4\n");
+                                                        finalString += ("Pientä pantheria. " + eArr[1] +  " " + (bet * 3) + "li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 3) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[2]:
-                                                        finalString += (eArr[2] + eArr[2] + " PANOS X 3\n");
+                                                        finalString += (eArr[2] + eArr[2] + "  " + (bet * 2) + "li-coinia\n");;
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 2) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[3]:
-                                                        finalString += ("SMALL ANIME VOITTO! PANOS X 7\n");
+                                                        finalString += ("SMALL ANIME VOITTO! " + (bet * 5) + "li-coinia\n");;
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 5) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[4]:
-                                                        finalString += ("Pikku pleikkarivässykkä bonus PANOS X 3\n");
+                                                        finalString += ("Pikku pleikkarivässykkä bonus. " + (bet * 3) + "li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 3) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                         case eArr[5]:
-                                                        finalString += ("PIENI (jac)XBOT! PANOS X 10\n");
+                                                        finalString += ("PIENI (jac)XBOT! " + (bet * 6) + "li-coinia\n");
+                                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 6) + " WHERE id = " + con.escape(message.member.id)); 
                                                         break;
                                                     }
                                                 }
@@ -403,8 +417,9 @@ b.on('message', message => {
                                             
                                             
                                         }
-                                        
+
                                         if(noWin) {
+                                            con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id)); 
                                             finalString += ("Ei voittoa :(\n");
                                         }
                                         let saldoString = "\nSaldo: " + result[0].money + " li-coinia";
