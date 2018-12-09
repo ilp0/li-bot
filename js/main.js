@@ -428,9 +428,8 @@ b.on('message', message => {
                                             
                                             
                                         }
-
+                                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id)); 
                                         if(noWin) {
-                                            con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id)); 
                                             finalString += ("Ei voittoa :(\n");
                                         }
                                         mesg.edit(finalString);
