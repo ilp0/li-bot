@@ -424,6 +424,7 @@ b.on('message', message => {
                                         }
                                         let saldoString = "\nSaldo: ";
                                         con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, res, field) => {
+                                            if (err) console.log(err);
                                             if (!err && res.length != 0) {
                                                 saldoString = "\nSaldo: " + res[0].money + " li-coinia";
                                             }
