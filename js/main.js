@@ -422,7 +422,12 @@ b.on('message', message => {
                                             con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id)); 
                                             finalString += ("Ei voittoa :(\n");
                                         }
-                                        let saldoString = "\nSaldo: " + result[0].money + " li-coinia";
+                                        let saldoString;
+                                        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, r, field) => {
+                                            if (!err && r.length != 0) {
+                                                saldoString = "\nSaldo: " + r[0].money + " li-coinia";
+                                            }
+                                        });
                                         finalString += saldoString;
                                         mesg.edit(finalString);
                                             
