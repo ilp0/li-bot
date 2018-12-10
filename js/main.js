@@ -251,7 +251,7 @@ b.on('message', message => {
                     break;
                     //Slot machine
                     case "slots":
-                        kasino.slots(sessions, args, message, con)
+                        kasino.slots(eArr, sessions, args, message, con)
                         break;
                     //check chipleader
                     case "updateleader":

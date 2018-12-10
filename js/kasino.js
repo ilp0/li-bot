@@ -61,7 +61,7 @@ module.exports = {
 
     },
     //slots
-    slots: function (sessions, args, message, con) {
+    slots: function (eArr, sessions, args, message, con) {
         let bet = parseInt(args[1], 10);
         let gameFound = false;
         let id = message.member.id;
