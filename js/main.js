@@ -346,7 +346,7 @@ b.on('message', message => {
                     break;
                     //check chipleader
                     case "updateleader":
-                    con.query("SELECT * FROM user ORDER BY money", (err, result, field) => {
+                    con.query("SELECT * FROM user ORDER BY money DESC", (err, result, field) => {
                         if(!err && result.length > 0) {
                             let cLeaderRole = message.guild.roles.find(role => role.name === "CHIP-LEADER");
                             cLeaderRole.members.map((mem, i) => {
