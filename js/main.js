@@ -364,7 +364,7 @@ b.on('message', message => {
                     let receiver = args[3];
                     let amount = args[2];
                     con.query("SELECT * FROM user WHERE name = " + receiver, (err, res, field) => {
-                        if(!err && result[0].length != 0) {
+                        if(!err && res[0].length !== 0) {
                             con.query("SELECT money FROM user WHERE id = " + con.escape(giver), (err, result, field) => {
                                 if (!err && result.length != 0) {
                                     if(result[0].money >= bet && bet > 0){
