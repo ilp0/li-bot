@@ -42,16 +42,18 @@ b.on('ready', () => {
 let leaderUpdater = setInterval(() => {
     con.query("SELECT * FROM user ORDER BY money DESC", (err, result, field) => {
         if(!err && result.length > 0) {
-            let cLeaderRole = b.guilds[0].roles.find(role => role.name === "CHIP-LEADER");
-            cLeaderRole.members.map((mem, i) => {
-                mem.removeRole(cLeaderRole).catch(console.error);
-            }); 
-            let cLeader = message.guild.members.get(result[0].id);
-            cLeader.addRole(cLeaderRole).catch(console.error);
-            message.reply("THE LEADER IS " + cLeader.id);
+            b.guilds.array().map((g) => {
+                let cLeaderRole = g.roles.find(role => role.name === "CHIP-LEADER")
+                cLeaderRole.members.map((mem) => {
+                    mem.removeRole(cLeaderRole).catch(console.error);
+                }); 
+                let cLeader = g.members.get(result[0].id);
+                cLeader.addRole(cLeaderRole).catch(console.error);
+            });
+            
         }
     });
-}, 60000);
+}, 30000);
 
 //on message
 b.on('message', message => {
