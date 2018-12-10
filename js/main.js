@@ -154,12 +154,10 @@ b.on('message', message => {
             case 'k':
                 switch (args[0]){
                     case 'register':
-
-                        
-
+                        kasino.register(message, con);
                     break;
                     case 'saldo':
-                        kasino.register(message, con);
+                        kasino.saldo(message, con);
                         break;
                     case 'flip':
                         kasino.flip(parseInt(args[1], 10), message, con);

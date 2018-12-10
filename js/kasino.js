@@ -18,6 +18,16 @@ module.exports = {
         });
     },
 
+    saldo: function (message, con) {
+        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+            if (!err && result.length != 0) {
+                message.reply("Pelitililläsi on " + result[0].money + " li-coinia");
+            } else {
+                message.reply("Error! Onko sinulla varmasti pelitili?");
+            }
+        });
+    },
+
     flip: function (bet, message, con) {
         con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
             if (!err && result.length != 0) {
@@ -46,6 +56,6 @@ module.exports = {
     },
 
     bj: function (){
-        
+
     }
 }
