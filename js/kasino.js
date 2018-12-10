@@ -64,6 +64,7 @@ module.exports = {
     slots: function (sessions, args, message, con) {
         let bet = parseInt(args[1], 10);
         let gameFound = false;
+        let id = message.member.id;
         sessions.map((session, i) => {
             if(session.id === message.member.id && session.game === "slots"){
                 message.reply("Sinulla on jo Slots peli käynnissä.");
