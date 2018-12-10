@@ -365,11 +365,12 @@ b.on('message', message => {
                     let amount = parseInt(args[1], 10);
                     con.query("SELECT * FROM user WHERE name = " + con.escape(receiver), (err, res, field) => {
                         if(!err && res.length !== 0) {
-                            con.query("SELECT money FROM user WHERE id = " + con.escape(giver), (err, result, field) => {
-                                if (!err && result.length !== 0) {
-                                    if(result[0].money >= bet && bet > 0){
+                            con.query("SELECT money FROM user WHERE id = " + con.escape(giver), (erro, result, field) => {
+                                if (!erro && result.length !== 0) {
+                                    if(result[0].money >= amount && amount > 0){
                                         con.query("UPDATE user SET money = money -" + con.escape(amount) + " WHERE id = " + con.escape(giver)); 
                                         con.query("UPDATE user SET money = money +" + con.escape(amount) + " WHERE name = " + con.escape(receiver)); 
+                                        message.reply("Annoit onnistuneesti "+ amount + " li-coinia käyttäjälle " + receiver + ".");
                                     } else {
                                         message.reply("Ei tarpeeksi rahaa antamiseen.");
                                     }
