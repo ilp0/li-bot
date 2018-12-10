@@ -1,28 +1,20 @@
-//discord libs
-var Discord = require('discord.js');
-//logging lib
-var logger = require('winston');
-//mysql lib
-var mysql = require('mysql');
-//for reading and writing files
-var fs = require('fs');
-//for russianroulette
-var rr = require('./rr');
-//prefix for
-const prefix = "!";
-//card deck for blackjack
-const bjDeck = [2,3,4,5,6,7,8,9,10,10,10,10,11];
-//emoji array
-const eArr = [];
-//session array for casino games
-var sessions = [{}];
-//logger stuff
+
+var Discord = require('discord.js');                //discord libs
+var logger = require('winston');                    //logging lib
+var mysql = require('mysql');                       //mysql lib
+var fs = require('fs');                             //for reading and writing files
+var rr = require('./rr');                           //for russianroulette
+var kasino = require('./kasino');
+const rrChamber = 6;                                //russian roulette chamber variable
+const prefix = "!";                                 //prefix for commands
+const bjDeck = [2,3,4,5,6,7,8,9,10,10,10,10,11];    //card deck for blackjack
+const eArr = [];                                    //emoji array
+var sessions = [{}];                                //session array for casino games
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
     colorize:true
 });
 logger.level = 'debug';
-//russian roulette chamber variable
 //new bot
 var b = new Discord.Client();
 //login
@@ -78,7 +70,7 @@ b.on('message', message => {
                 break;
             //russian roulette game
             case 'rr':
-                text = rr.russianRoulette();
+                text = rr.russianRoulette(rrChamber);
                 message.reply(text);
                 break;
             //random number generator
@@ -162,55 +154,16 @@ b.on('message', message => {
             case 'k':
                 switch (args[0]){
                     case 'register':
-                        con.query("SELECT * FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
-                            if (!err && result.length == 0){
-                                con.query("INSERT INTO user (id, name, money) VALUES (" + con.escape(message.member.id) + ", " + con.escape(message.member.displayName) + ", 500)", (err, result, field) => {
-                                    message.reply("Pelitili luotu! Rekisteröimisbonus 500 li-coinia!")
-                                });
-                            } else {
-                                message.reply("Olet jo rekisteröitynyt");
-                            }
-                        });
+
                         
 
                     break;
                     case 'saldo':
-                        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
-                            if (!err && result.length != 0) {
-                                message.reply("Pelitililläsi on " + result[0].money + " li-coinia");
-                            } else {
-                                message.reply("Error! Onko sinulla varmasti pelitili?");
-                            }
-                        });
-                    break;
+                        kasino.register(message, con);
+                        break;
                     case 'flip':
-                        bet = parseInt(args[1], 10);
-                        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
-                            if (!err && result.length != 0) {
-                                if(result[0].money >= bet && bet > 0){
-                                    var coin = Math.floor(Math.random() * 2);
-                                    var side = Math.floor(Math.random() * 50);
-                                    if (side === 25) {
-                                        message.reply("Kolikko tippui sivulleen. Hävisit " + (bet) + " li-coinia. Saldosi on "+ (result[0].money - bet));
-                                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id));
-
-                                    } else if (coin === 0) {
-                                        message.reply("Kruuna, voitit " + (bet*2) + " li-coinia. Saldosi on " + (result[0].money + bet));
-                                        con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id)); 
-                                    } else {
-                                        message.reply("Klaava, hävisit "+ bet + " li-coinia. Saldosi on " + (result[0].money - bet));
-                                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id));
-                                    } 
-                                } else {
-                                    message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " li-coinia");
-                                }
-                                
-                            } else {
-                                message.reply("Error! Onko sinulla varmasti pelitili?");
-                            }
-                        });
-                        
-                    break;
+                        kasino.flip(parseInt(args[1], 10), message, con);
+                        break;
                     case 'bj':{
                         switch (args[1]){
                             case 'new': 
