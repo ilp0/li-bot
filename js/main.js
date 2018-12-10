@@ -24,8 +24,6 @@ logger.level = 'debug';
 var rrChamber = 6;
 //new bot
 var b = new Discord.Client();
-//chip leader role
-let myRole = b.guilds.get("the guild id");
 //login
 b.on('ready', () => {
     logger.info('Connected to server');
@@ -40,6 +38,21 @@ b.on('ready', () => {
     eArr[6] = b.emojis.find(emoji => emoji.name === "supernut");
     eArr[7] = b.emojis.find(emoji => emoji.name === "monivalinta");
 });
+
+let leaderUpdater = setInterval(() => {
+    con.query("SELECT * FROM user ORDER BY money DESC", (err, result, field) => {
+        if(!err && result.length > 0) {
+            let cLeaderRole = b.guilds[0].roles.find(role => role.name === "CHIP-LEADER");
+            cLeaderRole.members.map((mem, i) => {
+                mem.removeRole(cLeaderRole).catch(console.error);
+            }); 
+            let cLeader = message.guild.members.get(result[0].id);
+            cLeader.addRole(cLeaderRole).catch(console.error);
+            message.reply("THE LEADER IS " + cLeader.id);
+        }
+    });
+}, 60000);
+
 //on message
 b.on('message', message => {
     logger.info('message' + message);
@@ -388,7 +401,13 @@ b.on('message', message => {
         }
     }
 });
-
+/*
+*
+*
+* RUSSIAN ROULETTE
+*
+*
+*/
 function russianRoulette() {
     var text = "*click*";
     var random = Math.floor(Math.random() * rrChamber);
@@ -431,7 +450,13 @@ function Create2DArray(rows) {
   
     return arr;
   }
-
+/*
+*
+*
+* SLOTS
+*
+*
+*/
   function slots (id, bet, message){
     con.query("SELECT money FROM user WHERE id = " + con.escape(id), (err, result, field) => {
         if (!err && result.length != 0) {
