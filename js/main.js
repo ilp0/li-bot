@@ -361,8 +361,8 @@ b.on('message', message => {
                     break;
                     case "give":
                     let giver = message.member.id;
-                    let receiver = args[3];
-                    let amount = args[2];
+                    let receiver = args[2];
+                    let amount = args[1];
                     con.query("SELECT * FROM user WHERE name = " + receiver, (err, res, field) => {
                         if(!err && res.length !== 0) {
                             con.query("SELECT money FROM user WHERE id = " + con.escape(giver), (err, result, field) => {
