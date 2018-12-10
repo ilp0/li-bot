@@ -24,9 +24,12 @@ logger.level = 'debug';
 var rrChamber = 6;
 //new bot
 var b = new Discord.Client();
+//chip leader role
+let myRole = b.guilds.get("the guild id");
 //login
 b.on('ready', () => {
     logger.info('Connected to server');
+    
     //init emojis
     eArr[0] = b.emojis.find(emoji => emoji.name === "kunnonkaarisuu");
     eArr[1] = b.emojis.find(emoji => emoji.name === "panther");
@@ -35,6 +38,7 @@ b.on('ready', () => {
     eArr[4] = b.emojis.find(emoji => emoji.name === "peek");
     eArr[5] = b.emojis.find(emoji => emoji.name === "coolboy");
     eArr[6] = b.emojis.find(emoji => emoji.name === "supernut");
+    eArr[7] = b.emojis.find(emoji => emoji.name === "monivalinta");
 });
 //on message
 b.on('message', message => {
@@ -182,14 +186,14 @@ b.on('message', message => {
                                 message.reply("Error! Onko sinulla varmasti pelitili?");
                             }
                         });
-                        
+                        checkChipLeader();
                     break;
                     case 'bj':{
                         switch (args[1]){
                             case 'new': 
                                 sessions.map((session, i) => {
                                 if(session.game === "bj" && session.id === message.member.id){
-                                    messager.reply("Sinulla on jo Blackjack peli käynnissä.");
+                                    message.reply("Sinulla on jo Blackjack peli käynnissä.");
                                 } else {
                                     bet = parseInt(args[2], 10);
                                     con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
@@ -242,7 +246,9 @@ b.on('message', message => {
                                                 message.reply("Yli 21. Hävisit " + session.bet + " li-coinia.");
                                                 session.gameStatus = "inactive";
                                                 con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
-                                                sessions.splice(i, 1);
+                                                sessions.map((s, index) => {
+                                                    if(s.id === session.id && s.game === "bj") sessions.splice(index,1);
+                                                });
                                             }
 
                                         } 
@@ -309,9 +315,10 @@ b.on('message', message => {
                                             sessions.map((s, index) => {
                                                 if(s.id === session.id && s.game === "bj") sessions.splice(index,1);
                                             });
+                                            checkChipLeader();
+                                            
                                     }
                                 });
-                                //if (!isGame) message.reply("Error! Peliä ei löytynyt. Kokeile `!k bj new <bet>`");
                             break;
                         }
                     }
@@ -321,13 +328,27 @@ b.on('message', message => {
                         let gameFound = false;
                         sessions.map((session, i) => {
                             if(session.id === message.member.id && session.game === "slots"){
-                                messager.reply("Sinulla on jo Slots peli käynnissä.");
+                                message.reply("Sinulla on jo Slots peli käynnissä.");
                                 gameFound = true;
                             }
                         });
                         if(!gameFound){
-                            slots(message.member.id, bet);
+                            slots(message.member.id, bet, message);
                         }
+                    break;
+                    case "updateleader":
+                    con.query("SELECT * FROM user ORDER BY money", (err, result, field) => {
+                        if(!err && result.length !== 0) {
+                            let cLeaderRole = message.guild.roles.find(role => role.name === "CHIP-LEADER");
+                            cLeaderRole.members.map((mem, i) => {
+                                mem.removeRole(cLeaderRole).catch(console.error);
+                            }); 
+                            let cLeader = message.guild.members.get(result[0].id);
+                            cLeader.addRole(cLeaderRole).catch(console.error);
+                            console.log("added new cleader");
+                            message.reply("THE LEADER IS " + cLeader.id);
+                        }
+                    });
                     break;
                     default: 
                         message.reply("Virheellinen kasino-komento. Yritä uudelleen.");
@@ -386,7 +407,7 @@ function Create2DArray(rows) {
     return arr;
   }
 
-  function slots (id, bet){
+  function slots (id, bet, message){
     con.query("SELECT money FROM user WHERE id = " + con.escape(id), (err, result, field) => {
         if (!err && result.length != 0) {
             sessions.push({game: "slots",id: id, bet: bet});
@@ -425,8 +446,8 @@ function Create2DArray(rows) {
                                         con.query("UPDATE user SET money = money +" + (con.escape(bet) * 8) + " WHERE id = " + con.escape(id)); 
                                         break;
                                         case eArr[1]:
-                                        finalString += ("JUST PANTHER " + eArr[1] + " " + (bet * 12) + " li-coinia\n");
-                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 12) + " WHERE id = " + con.escape(id)); 
+                                        finalString += ("JUST PANTHER " + eArr[1] + " " + (bet * 9) + " li-coinia\n");
+                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 9) + " WHERE id = " + con.escape(id)); 
                                         break;
                                         case eArr[2]:
                                         finalString += ("SUPER RISTI VOITTO! " + (bet * 10) + " li-coinia\n");
@@ -437,18 +458,23 @@ function Create2DArray(rows) {
                                         con.query("UPDATE user SET money = money +" + (con.escape(bet) * 15) + " WHERE id = " + con.escape(id)); 
                                         break;
                                         case eArr[4]:
-                                        finalString += ("Uskomaton pleikkarivässykkä bonus! " + (bet * 10) + " li-coinia\n");
-                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 10) + " WHERE id = " + con.escape(id)); 
+                                        finalString += ("Uskomaton pleikkarivässykkä bonus! " + (bet * 6) + " li-coinia\n");
+                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 6) + " WHERE id = " + con.escape(id)); 
 
                                         break;
                                         case eArr[5]:
-                                        finalString += ("(jac)XBOT! " + (bet * 20) + " li-coinia\n");
-                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 20) + " WHERE id = " + con.escape(id)); 
+                                        finalString += ("(jac)XBOT! " + (bet * 30) + " li-coinia\n");
+                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 30) + " WHERE id = " + con.escape(id)); 
 
                                         break;
                                         case eArr[6]:
-                                        finalString += ("SUPERNUT SUPER VOITTO! " + (bet * 25) + " li-coinia\n");
-                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 25) + " WHERE id = " + con.escape(id)); 
+                                        finalString += ("SUPERNUT SUPER VOITTO! " + (bet * 10) + " li-coinia\n");
+                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 10) + " WHERE id = " + con.escape(id)); 
+
+                                        break;
+                                        case eArr[7]:
+                                        finalString += ("MAANPUOLUSTUS EI OLE MIKÄÄN MONIVALINTAKYSYMYS!!! " + (bet * 1) + " li-coinia\n");
+                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 1) + " WHERE id = " + con.escape(id)); 
 
                                         break;
                                     }
@@ -468,20 +494,25 @@ function Create2DArray(rows) {
                                         con.query("UPDATE user SET money = money +" + (con.escape(bet) * 2) + " WHERE id = " + con.escape(id)); 
                                         break;
                                         case eArr[3]:
-                                        finalString += ("SMALL ANIME VOITTO! " + Math.floor(bet * 2.5) + " li-coinia\n");;
-                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 5) + " WHERE id = " + con.escape(id)); 
+                                        finalString += ("SMALL ANIME VOITTO! " + Math.floor(bet * 3) + " li-coinia\n");;
+                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 3) + " WHERE id = " + con.escape(id)); 
                                         break;
                                         case eArr[4]:
                                         finalString += ("Pikku pleikkarivässykkä bonus. " + (bet * 2) + " li-coinia\n");
                                         con.query("UPDATE user SET money = money +" + (con.escape(bet) * 2) + " WHERE id = " + con.escape(id)); 
                                         break;
                                         case eArr[5]:
-                                        finalString += ("PIENI (jac)XBOT! " + (bet * 3) + " li-coinia\n");
-                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 3) + " WHERE id = " + con.escape(id)); 
+                                        finalString += ("PIENI (jac)XBOT! " + (bet * 4) + " li-coinia\n");
+                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 4) + " WHERE id = " + con.escape(id)); 
                                         break;
                                         case eArr[6]:
-                                        finalString += ("SUPERNUT MEDIUM VOITTO! " + (bet * 5) + " li-coinia\n");
-                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 5) + " WHERE id = " + con.escape(id)); 
+                                        finalString += ("SUPERNUT MEDIUM VOITTO! " + (bet * 3) + " li-coinia\n");
+                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 3) + " WHERE id = " + con.escape(id)); 
+
+                                        break;
+                                        case eArr[7]:
+                                        finalString += ("ASEET KÄTEEN POJAT!!!!! " + (bet * 1) + " li-coinia\n");
+                                        con.query("UPDATE user SET money = money +" + (con.escape(bet) * 1) + " WHERE id = " + con.escape(id)); 
 
                                         break;
                                     }
@@ -503,6 +534,9 @@ function Create2DArray(rows) {
                });
             } else {
                 message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " li-coinia");
+                sessions.map((s, index) => {
+                    if(s.id === id) sessions.splice(index,1);
+                });
             }
         
         } else {
@@ -511,3 +545,4 @@ function Create2DArray(rows) {
         }
 });
 }
+
