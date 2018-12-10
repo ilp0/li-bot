@@ -25,6 +25,15 @@ module.exports = {
         var num = args[0];
         var text = Math.floor(Math.random() * parseInt(num, 10));
         message.reply(text);
+    },
+    Create2DArray(rows) {
+        var arr = [];
+  
+        for (var i=0;i<rows;i++) {
+           arr[i] = [];
+        }
+      
+        return arr;
     }
 }
 

@@ -20,10 +20,5 @@ module.exports = {
             message.reply('You are not in a voice channel I could join. >:(')
         }
     },
-    rand: function (args, message) {
-        var num = args[0];
-        var text = Math.floor(Math.random() * parseInt(num, 10));
-        message.reply(text);
-    }
 }
 
