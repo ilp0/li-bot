@@ -6,13 +6,15 @@ var logger = require('winston');
 var mysql = require('mysql');
 //for reading and writing files
 var fs = require('fs');
+//for russianroulette
+var rr = require('./rr');
 //prefix for
 const prefix = "!";
 //card deck for blackjack
 const bjDeck = [2,3,4,5,6,7,8,9,10,10,10,10,11];
-
+//emoji array
 const eArr = [];
-
+//session array for casino games
 var sessions = [{}];
 //logger stuff
 logger.remove(logger.transports.Console);
@@ -21,7 +23,6 @@ logger.add(new logger.transports.Console, {
 });
 logger.level = 'debug';
 //russian roulette chamber variable
-var rrChamber = 6;
 //new bot
 var b = new Discord.Client();
 //login
@@ -77,7 +78,7 @@ b.on('message', message => {
                 break;
             //russian roulette game
             case 'rr':
-                text = russianRoulette();
+                text = rr.russianRoulette();
                 message.reply(text);
                 break;
             //random number generator
@@ -400,28 +401,12 @@ b.on('message', message => {
                     default: 
                         message.reply("Virheellinen kasino-komento. Yritä uudelleen.");
                     }
+                    break;
+                    case "rpg": 
+                    message.reply("tulossa pian ;()");
         }
     }
 });
-/*
-*
-*
-* RUSSIAN ROULETTE
-*
-*
-*/
-function russianRoulette() {
-    var text = "*click*";
-    var random = Math.floor(Math.random() * rrChamber);
-    rrChamber--;
-    if (random === 0) {
-        text = "```THERE'S NO WAY OUT\n HELP ME\n HOW DID HE GET OUT\n I CAN'T SEE\n WHO ARE YOU\n THERE IS NO HOPE\n WHY DID IT HAVE TO BE ME\n WHAT HAVE I DONE TO DESERVE THIS\n KILL ME``` **reloading**";
-        rrChamber = 6
-    } else {
-        text = "*click* " + rrChamber + " left.";
-    }
-    return text;
-}
 
 var sqlCreds = JSON.parse(fs.readFileSync('misc/mysql.json', 'utf8'));
 // create connection variable
