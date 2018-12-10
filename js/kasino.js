@@ -61,7 +61,7 @@ module.exports = {
 
     },
     //slots
-    slots: function (args, message, con) {
+    slots: function (sessions, args, message, con) {
         let bet = parseInt(args[1], 10);
         let gameFound = false;
         sessions.map((session, i) => {
