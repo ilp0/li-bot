@@ -5,6 +5,8 @@ var mysql = require('mysql');                       //mysql lib
 var fs = require('fs');                             //for reading and writing files
 var rr = require('./rr');                           //for russianroulette
 var kasino = require('./kasino');
+var misc = require('./misc')
+var audio = require('./audio')
 const rrChamber = 6;                                //russian roulette chamber variable
 const prefix = "!";                                 //prefix for commands
 const bjDeck = [2,3,4,5,6,7,8,9,10,10,10,10,11];    //card deck for blackjack
@@ -75,73 +77,23 @@ b.on('message', message => {
                 break;
             //random number generator
             case 'rand':
-                var num = args[0];
-                var text = Math.floor(Math.random() * parseInt(num, 10));
-                message.reply(text);
+                misc.rand(args, message);
                 break;
             //help
             case 'help':
-                var text = "```AVAILABLE COMMANDS: \n !j -- random j quote \n !rr -- russian roulette game \n !rand <input> -- random number generator \n !k <command> <bet-size> -- kasino games \n    register\n    saldo\n    flip\n    bj\n    slots\n !help -- shows this message``` \nBot source code available @ https://github.com/ilp0/li-bot";
-                message.reply(text);
+                misc.help(message);
                 break;
             //play ben shapiro
             case 'ben':
-                if(message.member.voiceChannel) {
-                    message.member.voiceChannel.join()
-                    .then(connection => {
-                        const dispatcher = connection.playFile('misc/audio/fortnite-ben-shapiro.mp3', {passes: 3, volume: 0.4});
-                        dispatcher.on("end", end => {
-                            message.member.voiceChannel.leave();
-                        });
-                    })
-                    .catch(console.log);
-                } else {
-                    message.reply('You are not in a voice channel I could join. >:(')
-                }
-            
-            break;
+                audio.playClip(message, 'misc/audio/fortnite-ben-shapiro.mp3');
+                break;
+            //will smith fortnite  
             case 'will':
-                if(message.member.voiceChannel) {
-                    message.member.voiceChannel.join()
-                    .then(connection => {
-                        const dispatcher = connection.playFile('misc/audio/fortnite-will-smith.mp4', {passes: 3, volume: 0.4});
-                        dispatcher.on("end", end => {
-                            message.member.voiceChannel.leave();
-                        });
-                    })
-                    .catch(console.log);
-                } else {
-                    message.reply('You are not in a voice channel I could join. >:(')
-                }
-            
-            break;
+                audio.playClip(message, 'misc/audio/fortnite-will-smith.mp4');
+                break;
             //istun poikittain
             case 'istun-poikittain':
-                if(message.member.voiceChannel) {
-                    message.member.voiceChannel.join()
-                    .then(connection => {
-                        const dispatcher = connection.playFile('misc/audio/istun-poikittain.mp3', {passes: 3, volume: 0.4});
-                        dispatcher.on("end", end => {
-                            message.member.voiceChannel.leave();
-                        });
-                    })
-                    .catch(console.log);
-                } else {
-                    message.reply('You are not in a voice channel I could join. >:(')
-                }
-            
-            break;
-            //join voice channel
-            case 'join':
-                if(message.member.voiceChannel) {
-                    message.member.voiceChannel.join()
-                    .then(connection => {
-
-                    })
-                    .catch(console.log);
-                } else {
-                    message.reply('You are not in a voice channel I could join. >:(')
-                }
+                audio.playClip(message, 'misc/audio/istun-poikittain.mp3');
                 break;
             /*
             *
