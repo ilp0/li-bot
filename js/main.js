@@ -58,7 +58,7 @@ let leaderUpdater = setInterval(() => {
             
         }
     });
-}, 30000);
+}, 10000);
 
 b.on('message', message => {
     logger.info('message');
