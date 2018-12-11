@@ -40,7 +40,7 @@ let leaderUpdater = setInterval(() => {
                 for (let i = 0; i < result.length; i++) {
                     let member = g.members.find(m => m.user.id === result[i].id);
                     console.log(member.user.username);
-                    member.nickname = (member.user.username + " | " + result[i].money + "LC");
+                    member.setNickname = (member.user.username + " | " + result[i].money + "LC");
                     console.log(member.nickname);
                 }
                 //update the role
