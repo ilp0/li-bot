@@ -41,6 +41,7 @@ let leaderUpdater = setInterval(() => {
                     let membu = g.members.find(m => m.user.id === result[i].id);
                     console.log(membu.user.username);
                     nicknameString = (membu.user.username + " | " + result[i].money + "LC");
+                    membu.nickname = nicknameString;
                     membu.setNickname(nicknameString)
                     .catch(console.error);
                     console.log(membu.nickname);
