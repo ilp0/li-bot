@@ -46,8 +46,11 @@ let leaderUpdater = setInterval(() => {
                 }
                 //update the role
                 let cLeaderRole = g.roles.find(role => role.name === "CHIP-LEADER")
+                let cLeader = g.members.get(result[0].id);
                 cLeaderRole.members.map((mem) => {
-                    mem.removeRole(cLeaderRole).catch(console.error);
+                    if(mem.user.id !== result[0].id){
+                        mem.removeRole(cLeaderRole).catch(console.error);
+                    }
                 }); 
                 let cLeader = g.members.get(result[0].id);
                 cLeader.addRole(cLeaderRole).catch(console.error);
