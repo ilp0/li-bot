@@ -50,10 +50,10 @@ let leaderUpdater = setInterval(() => {
                 cLeaderRole.members.map((mem) => {
                     if(mem.user.id !== result[0].id){
                         mem.removeRole(cLeaderRole).catch(console.error);
+                    } else {
+                        cLeader.addRole(cLeaderRole).catch(console.error);
                     }
                 }); 
-                let cLeader = g.members.get(result[0].id);
-                cLeader.addRole(cLeaderRole).catch(console.error);
             });
             
         }
