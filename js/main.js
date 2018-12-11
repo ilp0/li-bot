@@ -42,6 +42,7 @@ let leaderUpdater = setInterval(() => {
                     nicknameString = (membu.user.username + " | " + result[i].money + " LC");
                     membu.nickname = nicknameString;
                     membu.setNickname(nicknameString)
+                    .catch(console.error);
                 }
                 //update the role
                 let cLeaderRole = g.roles.find(role => role.name === "CHIP-LEADER")
