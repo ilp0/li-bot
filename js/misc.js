@@ -58,6 +58,8 @@ module.exports = {
             } else {
                 newNumStr = (num / 1000).toFixed(1) + "k"
             }
+        } else {
+            newNumStr = num;
         }
         return newNumStr;
     }
