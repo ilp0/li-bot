@@ -37,7 +37,6 @@ module.exports = {
         return arr;
     },
     convertToSmallNums: (text) => {
-
         textArray = Array.from(text.toString());
         smallNumbers = ['₀','₁','₂','₃','₄','₅','₆','₇','₈','₉']
         textArray.map((c, ind) => {
@@ -49,6 +48,18 @@ module.exports = {
             }
         });
         return textArray.join("");
+    },
+    shortenNum: (num) => {
+        let newNumStr = "";
+        num = parseFloat(num);
+        if(num > 1000){
+            if(num > 1000000){
+                newNumStr = (num / 1000000).toFixed(1) + "m"
+            } else {
+                newNumStr = (num / 1000).toFixed(1) + "k"
+            }
+        }
+        return newNumStr;
     }
 }
 

@@ -38,7 +38,7 @@ let leaderUpdater = setInterval(() => {
                 //update nickname
                 for (let i = 0; i < result.length; i++) {
                     let membu = g.members.find(m => m.user.id === result[i].id);
-                    nicknameString = (membu.user.username + " | ʟᴠʟ 1 | " + misc.convertToSmallNums(result[i].money) + " ʟᴄ");
+                    nicknameString = (membu.user.username + " | ʟᴠʟ 1 | " + misc.shortenNum(result[i].money) + "LC");
                     membu.nickname = nicknameString;
                     membu.setNickname(nicknameString)
                     .catch(console.error);
