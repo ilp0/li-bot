@@ -39,12 +39,9 @@ let leaderUpdater = setInterval(() => {
                 //update nickname
                 for (let i = 0; i < result.length; i++) {
                     let membu = g.members.find(m => m.user.id === result[i].id);
-                    console.log(membu.user.username);
-                    nicknameString = (membu.user.username + " | " + result[i].money + "LC");
+                    nicknameString = (membu.user.username + " | " + result[i].money + " LC");
                     membu.nickname = nicknameString;
                     membu.setNickname(nicknameString)
-                    .catch(console.error);
-                    console.log(membu.nickname);
                 }
                 //update the role
                 let cLeaderRole = g.roles.find(role => role.name === "CHIP-LEADER")
@@ -57,7 +54,7 @@ let leaderUpdater = setInterval(() => {
             
         }
     });
-}, 10000);
+}, 30000);
 
 b.on('message', message => {
     logger.info('message');
