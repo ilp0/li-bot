@@ -7,13 +7,12 @@
 */
 let misc = require('./misc');
 const bjDeck = [2,3,4,5,6,7,8,9,10,10,10,10,11];    //card deck for blackjack
-var sessions = [{}];                                //session array for casino games
 
 module.exports = {
     register: function (message, con) {
-        con.query("SELECT * FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+        con.query("SELECT * FROM user WHERE id = " + con.escape(message.member.user.id), (err, result, field) => {
             if (!err && result.length == 0){
-                con.query("INSERT INTO user (id, name, money) VALUES (" + con.escape(message.member.id) + ", " + con.escape(message.member.displayName) + ", 500)", (err, result, field) => {
+                con.query("INSERT INTO user (id, name, money) VALUES (" + con.escape(message.member.user.id) + ", " + con.escape(message.member.displayName) + ", 500)", (err, result, field) => {
                     message.reply("Pelitili luotu! Rekisteröimisbonus 500 li-coinia!")
                 });
             } else {
@@ -23,7 +22,7 @@ module.exports = {
     },
 
     saldo: function (message, con) {
-        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.user.id), (err, result, field) => {
             if (!err && result.length != 0) {
                 message.reply("Pelitililläsi on " + result[0].money + " li-coinia");
             } else {
@@ -32,22 +31,22 @@ module.exports = {
         });
     },
     //coinflip
-    flip: function (bet, message, con) {
-        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+    flip: function (bet, message, con, args, sessions) {
+        con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.user.id), (err, result, field) => {
             if (!err && result.length != 0) {
                 if(result[0].money >= bet && bet > 0){
                     var coin = Math.floor(Math.random() * 2);
                     var side = Math.floor(Math.random() * 50);
                     if (side === 25) {
                         message.reply("Kolikko tippui sivulleen. Hävisit " + (bet) + " li-coinia. Saldosi on "+ (result[0].money - bet));
-                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id));
+                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.user.id));
 
                     } else if (coin === 0) {
                         message.reply("Kruuna, voitit " + (bet*2) + " li-coinia. Saldosi on " + (result[0].money + bet));
-                        con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id)); 
+                        con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(message.member.user.id)); 
                     } else {
                         message.reply("Klaava, hävisit "+ bet + " li-coinia. Saldosi on " + (result[0].money - bet));
-                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.id));
+                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.user.id));
                     } 
                 } else {
                     message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " li-coinia");
@@ -59,22 +58,22 @@ module.exports = {
         });
     },
     //blackjack
-    bj: function (args, message, con){
+    bj: function (sessions, args, message, con){
         switch (args[1]){
             case 'new': 
                 sessions.map((session, i) => {
-                if(session.game === "bj" && session.id === message.member.id){
+                if(session.game === "bj" && session.id === message.member.user.id){
                     message.reply("Sinulla on jo Blackjack peli käynnissä.");
                 } else {
                     bet = parseInt(args[2], 10);
-                    con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+                    con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.user.id), (err, result, field) => {
                     if (!err && result.length != 0) {
                         if(result[0].money >= bet && bet > 0){
                             let hand = [bjDeck[Math.floor(Math.random() * bjDeck.length)],bjDeck[Math.floor(Math.random() * bjDeck.length)]];
                             let dealerHand = [bjDeck[Math.floor(Math.random() * bjDeck.length)], bjDeck[Math.floor(Math.random() * bjDeck.length)]];
                             message.reply("\nKätesi: " + hand[0] + " " + hand[1] + " = " + (hand[0] + hand[1] + "\nJakajan käsi: " + dealerHand[0] + " X" + "\n!k bj hit || !k bj stay"));
                             let gameStatus = "active";
-                            sessions.push({game: "bj",id: message.member.id, bet: bet, hand: hand, dealerHand: dealerHand, status: gameStatus });
+                            sessions.push({game: "bj",id: message.member.user.id, bet: bet, hand: hand, dealerHand: dealerHand, status: gameStatus });
                         } else {
                             message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " li-coinia");
                         }
@@ -89,7 +88,7 @@ module.exports = {
                 let isGame = false; 
                 let newCard;
                 sessions.map((session, i) => {
-                    if (session.id === message.member.id && session.status === 'active'){
+                    if (session.id === message.member.user.id && session.status === 'active'){
                         let handString = "";
                         let total = 0;
                         session.hand.map((card,i) => {
@@ -128,8 +127,8 @@ module.exports = {
             break;
             case 'stay':
                 sessions.map((session, i) => {
-                    if (session.status === "active" && session.id === message.member.id){
-                        if (session.id === message.member.id){
+                    if (session.status === "active" && session.id === message.member.user.id){
+                        if (session.id === message.member.user.id){
                             let handString = "";
                             let dealerHandString = ""; 
                             let dealerTotal = 0;
@@ -155,7 +154,7 @@ module.exports = {
                                     message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
                                     message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " li-coinia.");
                                     console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " li-coinia.");
-                                    con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.id)); 
+                                    con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.user.id)); 
                                 } else if (playerTotal === 21){
                                     //BLACKJACK
                                     message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
@@ -194,12 +193,12 @@ module.exports = {
         }
     },
     //slots
-    slots: function (eArr, args, message, con) {
+    slots: function (eArr, sessions, args, message, con) {
         let bet = parseInt(args[1], 10);
         let gameFound = false;
-        let id = message.member.id;
+        let id = message.member.user.id;
         sessions.map((session, i) => {
-            if(session.id === message.member.id && session.game === "slots"){
+            if(session.id === message.member.user.id && session.game === "slots"){
                 message.reply("Sinulla on jo Slots peli käynnissä.");
                 gameFound = true;
             }
@@ -345,7 +344,7 @@ module.exports = {
     },
 
     give: (args, message, con) => {
-        let giver = message.member.id;
+        let giver = message.member.user.id;
         let receiver = args[2];
         let amount = parseInt(args[1], 10);
         con.query("SELECT * FROM user WHERE name = " + con.escape(receiver), (err, res, field) => {
