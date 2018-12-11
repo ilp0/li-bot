@@ -49,7 +49,7 @@ let leaderUpdater = setInterval(() => {
                 let cLeader = g.members.get(result[0].id);
                 if (cLeader.user.id === "517830791255031848") cLeader = g.members.get(result[1].id);
                 cLeaderRole.members.map((mem) => {
-                    if(mem.user.id !== result[0].id){
+                    if(mem.user.id !== cLeader.user.id){
                         mem.removeRole(cLeaderRole).catch(console.error);
                     }
                 }); 
