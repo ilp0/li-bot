@@ -47,6 +47,7 @@ let leaderUpdater = setInterval(() => {
                 //update the role
                 let cLeaderRole = g.roles.find(role => role.name === "CHIP-LEADER")
                 let cLeader = g.members.get(result[0].id);
+                if (cLeader.user.id === "517830791255031848") cLeader = g.members.get(result[1].id);
                 cLeaderRole.members.map((mem) => {
                     if(mem.user.id !== result[0].id){
                         mem.removeRole(cLeaderRole).catch(console.error);
@@ -116,7 +117,7 @@ b.on('message', message => {
                     case 'flip':
                         kasino.flip(parseInt(args[1], 10), message, con);
                         break;
-                    case 'bj':
+                    case 'bjxxxx':
                         kasino.bj(sessions, args, message, con);
                         break;
                     //Slot machine

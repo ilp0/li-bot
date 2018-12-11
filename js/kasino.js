@@ -7,7 +7,7 @@
 */
 let misc = require('./misc');
 const bjDeck = [2,3,4,5,6,7,8,9,10,10,10,10,11];    //card deck for blackjack
-
+const botId = "517830791255031848";
 module.exports = {
     register: function (message, con) {
         con.query("SELECT * FROM user WHERE id = " + con.escape(message.member.user.id), (err, result, field) => {
@@ -40,13 +40,19 @@ module.exports = {
                     if (side === 25) {
                         message.reply("Kolikko tippui sivulleen. Hävisit " + (bet) + " li-coinia. Saldosi on "+ (result[0].money - bet));
                         con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.user.id));
+                        con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(botId)); 
+
 
                     } else if (coin === 0) {
                         message.reply("Kruuna, voitit " + (bet*2) + " li-coinia. Saldosi on " + (result[0].money + bet));
                         con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(message.member.user.id)); 
+                        con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(botId)); 
+
                     } else {
                         message.reply("Klaava, hävisit "+ bet + " li-coinia. Saldosi on " + (result[0].money - bet));
                         con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(message.member.user.id));
+                        con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(botId)); 
+
                     } 
                 } else {
                     message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " li-coinia");
@@ -231,6 +237,7 @@ module.exports = {
                                                                     + row[1][0] + " " + row[1][1] + " " + row[1][2] + "\n" 
                                                                     + row[2][0] + " " + row[2][1] + " " + row[2][2] + "\n";
                                     let noWin = true;
+                                    let winAmount = 0;
                                     for(let i = 0; i<3; i++){
                                         if (row[i][0] === row[i][1]){
                                             noWin = false;
@@ -238,85 +245,82 @@ module.exports = {
                                             // kolme samaa
                                             switch(row[i][0]){
                                                 case eArr[0]:
+                                                winAmount = bet*6;
                                                 finalString += ("HAPPY BONUS! " + (bet * 6) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 6) + " WHERE id = " + con.escape(id)); 
                                                 break;
                                                 case eArr[1]:
+                                                winAmount = bet*7;
                                                 finalString += ("JUST PANTHER " + eArr[1] + " " + (bet * 7) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 7) + " WHERE id = " + con.escape(id)); 
                                                 break;
                                                 case eArr[2]:
+                                                winAmount = bet*8;
                                                 finalString += ("SUPER RISTI VOITTO! " + (bet * 8) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 8) + " WHERE id = " + con.escape(id)); 
                                                 break;
                                                 case eArr[3]:
+                                                winAmount = bet*12;
                                                 finalString += ("SUPER ANIME VOITTO!!!! " + (bet * 12) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 12) + " WHERE id = " + con.escape(id)); 
                                                 break;
                                                 case eArr[4]:
+                                                winAmount = bet*6;
                                                 finalString += ("Uskomaton pleikkarivässykkä bonus! " + (bet * 6) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 6) + " WHERE id = " + con.escape(id)); 
-        
                                                 break;
                                                 case eArr[5]:
+                                                winAmount = bet*17;
                                                 finalString += ("(jac)XBOT! " + (bet * 17) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 17) + " WHERE id = " + con.escape(id)); 
-        
                                                 break;
                                                 case eArr[6]:
+                                                winAmount = bet*10;
                                                 finalString += ("SUPERNUT SUPER VOITTO! " + (bet * 10) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 10) + " WHERE id = " + con.escape(id)); 
-        
                                                 break;
                                                 case eArr[7]:
+                                                winAmount = bet*1;
                                                 finalString += ("MAANPUOLUSTUS EI OLE MIKÄÄN MONIVALINTAKYSYMYS!!! " + (bet * 1) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 1) + " WHERE id = " + con.escape(id)); 
-        
                                                 break;
                                             }
                                         } else {
                                             // kaksi samaa
                                             switch(row[i][0]){
                                                 case eArr[0]:
+                                                winAmount = bet*1;
                                                 finalString += ("Sentti on miljoonan alku. " + (bet * 1) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 1) + " WHERE id = " + con.escape(id)); 
                                                 break;
                                                 case eArr[1]:
+                                                winAmount = Math.floor(bet*1.5);
                                                 finalString += ("Pientä pantheria. " + eArr[1] +  " " + Math.floor(bet * 1.5) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + Math.floor(con.escape(bet) * 1.5) + " WHERE id = " + con.escape(id)); 
                                                 break;
                                                 case eArr[2]:
+                                                winAmount = bet*2;
                                                 finalString += ("Pieni risti voitto! " + (bet * 2) + " li-coinia\n");;
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 2) + " WHERE id = " + con.escape(id)); 
                                                 break;
                                                 case eArr[3]:
+                                                winAmount = bet*3;
                                                 finalString += ("SMALL ANIME VOITTO! " + Math.floor(bet * 3) + " li-coinia\n");;
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 3) + " WHERE id = " + con.escape(id)); 
                                                 break;
                                                 case eArr[4]:
+                                                winAmount = bet*2;
                                                 finalString += ("Pikku pleikkarivässykkä bonus. " + (bet * 2) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 2) + " WHERE id = " + con.escape(id)); 
                                                 break;
                                                 case eArr[5]:
+                                                winAmount = bet*4;
                                                 finalString += ("PIENI (jac)XBOT! " + (bet * 4) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 4) + " WHERE id = " + con.escape(id)); 
                                                 break;
                                                 case eArr[6]:
-                                                finalString += ("SUPERNUT MEDIUM VOITTO! " + (bet * 3) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 3) + " WHERE id = " + con.escape(id)); 
-        
+                                                winAmount = bet*3;
+                                                finalString += ("SUPERNUT MEDIUM VOITTO! " + (winAmount) + " li-coinia\n");        
                                                 break;
                                                 case eArr[7]:
-                                                finalString += ("ASEET KÄTEEN POJAT!!!!! " + (bet * 1) + " li-coinia\n");
-                                                con.query("UPDATE user SET money = money +" + (con.escape(bet) * 1) + " WHERE id = " + con.escape(id)); 
-        
+                                                winAmount = bet*1;
+                                                finalString += ("ASEET KÄTEEN POJAT!!!!! " + (bet * 1) + " li-coinia\n");        
                                                 break;
                                             }
                                         }
                                     }
                                     
                                 }
+                                con.query("UPDATE user SET money = money +" + con.escape(winAmount) + " WHERE id = " + con.escape(id)); 
+                                con.query("UPDATE user SET money = money -" + con.escape(winAmount) + " WHERE id = " + con.escape(botId));
                                 con.query("UPDATE user SET money = money -" + con.escape(bet) + " WHERE id = " + con.escape(id)); 
+                                con.query("UPDATE user SET money = money +" + con.escape(bet) + " WHERE id = " + con.escape(botId)); 
                                 if(noWin) {
                                     finalString += ("Ei voittoa :(\n");
                                 }
