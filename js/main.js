@@ -51,10 +51,9 @@ let leaderUpdater = setInterval(() => {
                     if(mem.user.id !== result[0].id){
                         mem.removeRole(cLeaderRole).catch(console.error);
                     }
-                });
+                }); 
                 cLeader.addRole(cLeaderRole).catch(console.error);
 
-                }); 
             });
             
         }
