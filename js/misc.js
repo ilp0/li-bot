@@ -39,7 +39,7 @@ module.exports = {
     convertToSmallNums: (text) => {
 
         textArray = Array.from(text.toString());
-        smallNumbers = ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹']
+        smallNumbers = ['₀','₁','₂','₃','₄','₅','₆','₇','₈','₉']
         textArray.map((c, ind) => {
             for(let i = 0; i < 10; i++) {
                 if(c === i.toString()){
