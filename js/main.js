@@ -40,7 +40,7 @@ let leaderUpdater = setInterval(() => {
                 for (let i = 0; i < result.length; i++) {
                     let member = g.members.find(m => m.user.id === result[i].id);
                     console.log(member.user.username);
-                    member.setNickname = (member.user.username + " | " + result[i].money + "LC");
+                    member.setNickname(member.user.username + " | " + result[i].money + "LC");
                     console.log(member.nickname);
                 }
                 //update the role
@@ -57,7 +57,7 @@ let leaderUpdater = setInterval(() => {
 }, 10000);
 
 b.on('message', message => {
-    logger.info('message' + message);
+    logger.info('message');
     //if message has ! in the beginning
     if(message.content.startsWith("!")) {
         //parse the message and args to args array
