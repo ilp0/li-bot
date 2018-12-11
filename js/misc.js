@@ -17,6 +17,7 @@ module.exports = {
         \n    flip
         \n    bj
         \n    slots
+        \n    give <amount> <username>
         \n !help -- shows this message\`\`\` 
         \nBot source code available @ https://github.com/ilp0/li-bot`;
         message.reply(text);

@@ -6,6 +6,8 @@
 *
 */
 let misc = require('./misc');
+const bjDeck = [2,3,4,5,6,7,8,9,10,10,10,10,11];    //card deck for blackjack
+var sessions = [{}];                                //session array for casino games
 
 module.exports = {
     register: function (message, con) {
@@ -30,7 +32,7 @@ module.exports = {
         });
     },
     //coinflip
-    flip: function (bet, message, con, args, sessions) {
+    flip: function (bet, message, con) {
         con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
             if (!err && result.length != 0) {
                 if(result[0].money >= bet && bet > 0){
@@ -57,11 +59,142 @@ module.exports = {
         });
     },
     //blackjack
-    bj: function (){
+    bj: function (args, message, con){
+        switch (args[1]){
+            case 'new': 
+                sessions.map((session, i) => {
+                if(session.game === "bj" && session.id === message.member.id){
+                    message.reply("Sinulla on jo Blackjack peli käynnissä.");
+                } else {
+                    bet = parseInt(args[2], 10);
+                    con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.id), (err, result, field) => {
+                    if (!err && result.length != 0) {
+                        if(result[0].money >= bet && bet > 0){
+                            let hand = [bjDeck[Math.floor(Math.random() * bjDeck.length)],bjDeck[Math.floor(Math.random() * bjDeck.length)]];
+                            let dealerHand = [bjDeck[Math.floor(Math.random() * bjDeck.length)], bjDeck[Math.floor(Math.random() * bjDeck.length)]];
+                            message.reply("\nKätesi: " + hand[0] + " " + hand[1] + " = " + (hand[0] + hand[1] + "\nJakajan käsi: " + dealerHand[0] + " X" + "\n!k bj hit || !k bj stay"));
+                            let gameStatus = "active";
+                            sessions.push({game: "bj",id: message.member.id, bet: bet, hand: hand, dealerHand: dealerHand, status: gameStatus });
+                        } else {
+                            message.reply("Ei pelioikeutta kyseisellä panoksella. Pelitililläsi on " + result[0].money + " li-coinia");
+                        }
+                    } else {
+                        message.reply("Error! Onko sinulla varmasti pelitili?");
+                    }
+                    });
+                }
+                });
+            break;
+            case 'hit':
+                let isGame = false; 
+                let newCard;
+                sessions.map((session, i) => {
+                    if (session.id === message.member.id && session.status === 'active'){
+                        let handString = "";
+                        let total = 0;
+                        session.hand.map((card,i) => {
+                            handString += card + " ";
+                            total += card;
+                        });
+                        newCard = bjDeck[Math.floor(Math.random() * bjDeck.length)]
+                        session.hand.push(newCard);
+                        total += newCard;
+                        handString += newCard + " ";
+                        message.reply("Your new hand: " + handString + " = " + total);
+                        sessions[i] = session;
+                        if(total > 21) {
+                            let isDiscounted = false;
+                            session.hand.map((c, i) => {
+                                if (c === 11 && !isDiscounted) {
+                                    session.hand[i] = 1;
+                                    total -= 10;
+                                    isDiscounted = true;
+                                    sessions[i] = session;
 
+                                }
+                            });
+                            if(total > 21){
+                                message.reply("Yli 21. Hävisit " + session.bet + " li-coinia.");
+                                session.gameStatus = "inactive";
+                                con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
+                                sessions.map((s, index) => {
+                                    if(s.id === session.id && s.game === "bj") sessions.splice(index,1);
+                                });
+                            }
+
+                        } 
+                    }
+                });
+            break;
+            case 'stay':
+                sessions.map((session, i) => {
+                    if (session.status === "active" && session.id === message.member.id){
+                        if (session.id === message.member.id){
+                            let handString = "";
+                            let dealerHandString = ""; 
+                            let dealerTotal = 0;
+                            let playerTotal = 0;
+                            let newCard = 0;
+                            session.dealerHand.map((card,i) => {
+                                dealerHandString += card + " ";
+                                dealerTotal += card;
+                            });
+                            session.hand.map((card,i) => {
+                                handString += card + " ";
+                                playerTotal += card;
+                            });
+                            message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\n Jakajan käsi: " + dealerHandString + " = " + dealerTotal);
+                            while (dealerTotal < 16) {
+                                //hit
+                                newCard = bjDeck[Math.floor(Math.random() * bjDeck.length)];
+                                session.dealerHand.push(newCard);
+                                dealerTotal += newCard;
+                                dealerHandString += newCard + " ";
+                                if (dealerTotal > 21 && playerTotal !== 21) {
+                                    //dealer loses
+                                    message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
+                                    message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " li-coinia.");
+                                    console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " li-coinia.");
+                                    con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.id)); 
+                                } else if (playerTotal === 21){
+                                    //BLACKJACK
+                                    message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
+                                    message.reply("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " li-coinia!");
+                                    console.log("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " li-coinia!");
+                                    con.query("UPDATE user SET money = money +" + con.escape(Math.floor(session.bet * 1.5)) + " WHERE id = " + con.escape(session.id)); 
+                                } else if (playerTotal > dealerTotal && dealerTotal >= 16 && dealerTotal <= 21) {
+                                    //pelaaja voittaa
+                                    message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
+                                    message.reply("Onnea! Voitit " + (session.bet * 2) + " li-coinia.");
+                                    console.log("Onnea! Voitit " + (session.bet * 2) + " li-coinia.");
+                                    con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
+                                } else if (playerTotal === dealerTotal && dealerTotal >= 16) {
+                                    //rahojen palautus
+                                    message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
+                                    message.reply("Tasapeli. Rahojen palautus.")
+                                    console.log("Tasapeli. Rahojen palautus.")
+                                } else if (playerTotal < dealerTotal && dealerTotal >= 16 && dealerTotal <= 21) {
+                                    //pelaaja häviää
+                                    message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
+                                    message.reply("Hävisit jakajalle " + session.bet + " li-coinia.");
+                                    console.log("Hävisit jakajalle " + session.bet + " li-coinia.");
+                                    con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
+
+                                    }
+                                }
+                            }
+                            sessions.map((s, index) => {
+                                if(s.id === session.id && s.game === "bj") sessions.splice(index,1);
+                            });
+
+                            
+                    }
+                });
+            break;
+        }
     },
     //slots
-    slots: function (eArr, sessions, args, message, con) {
+    slots: function (eArr, args, message, con) {
         let bet = parseInt(args[1], 10);
         let gameFound = false;
         let id = message.member.id;
@@ -209,5 +342,28 @@ module.exports = {
                 }
         });
         }
+    },
+
+    give: (args, message, con) => {
+        let giver = message.member.id;
+        let receiver = args[2];
+        let amount = parseInt(args[1], 10);
+        con.query("SELECT * FROM user WHERE name = " + con.escape(receiver), (err, res, field) => {
+            if(!err && res.length !== 0) {
+                con.query("SELECT money FROM user WHERE id = " + con.escape(giver), (erro, result, field) => {
+                    if (!erro && result.length !== 0) {
+                        if(result[0].money >= amount && amount > 0){
+                            con.query("UPDATE user SET money = money -" + con.escape(amount) + " WHERE id = " + con.escape(giver)); 
+                            con.query("UPDATE user SET money = money +" + con.escape(amount) + " WHERE name = " + con.escape(receiver)); 
+                            message.reply("Annoit onnistuneesti "+ amount + " li-coinia käyttäjälle " + receiver + ".");
+                        } else {
+                            message.reply("Ei tarpeeksi rahaa antamiseen.");
+                        }
+                    }
+                });
+            } else {
+                message.reply("Käyttäjää ei löytynyt.");
+            }
+        });
     }
 }
