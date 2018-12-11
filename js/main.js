@@ -38,10 +38,11 @@ let leaderUpdater = setInterval(() => {
             b.guilds.array().map((g) => {
                 //update nickname
                 for (let i = 0; i < result.length; i++) {
-                    let member = g.members.find(m => m.user.id === result[i].id);
-                    console.log(member.user.username);
-                    member.setNickname(member.user.username + " | " + result[i].money + "LC");
-                    console.log(member.nickname);
+                    let membu = g.members.find(m => m.user.id === result[i].id);
+                    console.log(membu.user.username);
+                    nicknameString = (membu.user.username + " | " + result[i].money + "LC");
+                    membu.setNickname(nicknameString);
+                    console.log(membu.nickname);
                 }
                 //update the role
                 let cLeaderRole = g.roles.find(role => role.name === "CHIP-LEADER")
