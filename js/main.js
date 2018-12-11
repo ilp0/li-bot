@@ -39,8 +39,8 @@ let leaderUpdater = setInterval(() => {
                 //update nickname
                 for (let i = 0; i < result.length; i++) {
                     let member = g.members.find(m => m.id === result[i].id);
-                    let dName = member.displayName.split(" |");
-                    member.displayName = (dName[0] + " | " + result[i].money + "LC");
+                    let dName = member.nickname.split(" |");
+                    member.nickname = (dName[0] + " | " + result[i].money + "LC");
                 }
                 //update the role
                 let cLeaderRole = g.roles.find(role => role.name === "CHIP-LEADER")
