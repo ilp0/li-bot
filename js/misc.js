@@ -40,10 +40,9 @@ module.exports = {
 
         textArray = Array.from(text.toString());
         smallNumbers = ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹']
-        numbers = ['0','1','2','3','4','5','6','7','8','9']
         textArray.map((c, ind) => {
             for(let i = 0; i < 10; i++) {
-                if(c === numbers[i]){
+                if(c === i.toString()){
                     c = smallNumbers[i];
                     textArray[ind] = c;
                 }
