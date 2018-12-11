@@ -31,7 +31,7 @@ module.exports = {
         });
     },
     //coinflip
-    flip: function (bet, message, con, args, sessions) {
+    flip: function (bet, message, con) {
         con.query("SELECT money FROM user WHERE id = " + con.escape(message.member.user.id), (err, result, field) => {
             if (!err && result.length != 0) {
                 if(result[0].money >= bet && bet > 0){

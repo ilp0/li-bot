@@ -118,7 +118,7 @@ b.on('message', message => {
                         break;
                     //Slot machine
                     case "slots":
-                        kasino.slots(sessions, eArr, args, message, con)
+                        kasino.slots(eArr, sessions, args, message, con)
                         break;
                     case "give":
                         kasino.give(args, message, con)
@@ -127,9 +127,9 @@ b.on('message', message => {
                         message.reply("Virheellinen kasino-komento. Yritä uudelleen.");
                     }
                     break;
-                case "rpg": 
-                    message.reply("tulossa pian ;()");
-                    break;
+            case "rpg": 
+                message.reply("tulossa pian ;()");
+                break;
 
         }
     }
