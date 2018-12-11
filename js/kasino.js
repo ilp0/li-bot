@@ -245,35 +245,35 @@ module.exports = {
                                             // kolme samaa
                                             switch(row[i][0]){
                                                 case eArr[0]:
-                                                winAmount = bet*6;
+                                                winAmount +=bet*6;
                                                 finalString += ("HAPPY BONUS! " + (bet * 6) + " li-coinia\n");
                                                 break;
                                                 case eArr[1]:
-                                                winAmount = bet*7;
+                                                winAmount +=bet*7;
                                                 finalString += ("JUST PANTHER " + eArr[1] + " " + (bet * 7) + " li-coinia\n");
                                                 break;
                                                 case eArr[2]:
-                                                winAmount = bet*8;
+                                                winAmount +=bet*8;
                                                 finalString += ("SUPER RISTI VOITTO! " + (bet * 8) + " li-coinia\n");
                                                 break;
                                                 case eArr[3]:
-                                                winAmount = bet*12;
+                                                winAmount +=bet*12;
                                                 finalString += ("SUPER ANIME VOITTO!!!! " + (bet * 12) + " li-coinia\n");
                                                 break;
                                                 case eArr[4]:
-                                                winAmount = bet*6;
+                                                winAmount +=bet*6;
                                                 finalString += ("Uskomaton pleikkarivässykkä bonus! " + (bet * 6) + " li-coinia\n");
                                                 break;
                                                 case eArr[5]:
-                                                winAmount = bet*17;
+                                                winAmount +=bet*17;
                                                 finalString += ("(jac)XBOT! " + (bet * 17) + " li-coinia\n");
                                                 break;
                                                 case eArr[6]:
-                                                winAmount = bet*10;
+                                                winAmount +=bet*10;
                                                 finalString += ("SUPERNUT SUPER VOITTO! " + (bet * 10) + " li-coinia\n");
                                                 break;
                                                 case eArr[7]:
-                                                winAmount = bet*1;
+                                                winAmount +=bet*1;
                                                 finalString += ("MAANPUOLUSTUS EI OLE MIKÄÄN MONIVALINTAKYSYMYS!!! " + (bet * 1) + " li-coinia\n");
                                                 break;
                                             }
@@ -281,35 +281,35 @@ module.exports = {
                                             // kaksi samaa
                                             switch(row[i][0]){
                                                 case eArr[0]:
-                                                winAmount = bet*1;
+                                                winAmount +=bet*1;
                                                 finalString += ("Sentti on miljoonan alku. " + (bet * 1) + " li-coinia\n");
                                                 break;
                                                 case eArr[1]:
-                                                winAmount = Math.floor(bet*1.5);
+                                                winAmount +=Math.floor(bet*1.5);
                                                 finalString += ("Pientä pantheria. " + eArr[1] +  " " + Math.floor(bet * 1.5) + " li-coinia\n");
                                                 break;
                                                 case eArr[2]:
-                                                winAmount = bet*2;
+                                                winAmount +=bet*2;
                                                 finalString += ("Pieni risti voitto! " + (bet * 2) + " li-coinia\n");;
                                                 break;
                                                 case eArr[3]:
-                                                winAmount = bet*3;
+                                                winAmount +=bet*3;
                                                 finalString += ("SMALL ANIME VOITTO! " + Math.floor(bet * 3) + " li-coinia\n");;
                                                 break;
                                                 case eArr[4]:
-                                                winAmount = bet*2;
+                                                winAmount +=bet*2;
                                                 finalString += ("Pikku pleikkarivässykkä bonus. " + (bet * 2) + " li-coinia\n");
                                                 break;
                                                 case eArr[5]:
-                                                winAmount = bet*4;
+                                                winAmount +=bet*4;
                                                 finalString += ("PIENI (jac)XBOT! " + (bet * 4) + " li-coinia\n");
                                                 break;
                                                 case eArr[6]:
-                                                winAmount = bet*3;
+                                                winAmount +=bet*3;
                                                 finalString += ("SUPERNUT MEDIUM VOITTO! " + (winAmount) + " li-coinia\n");        
                                                 break;
                                                 case eArr[7]:
-                                                winAmount = bet*1;
+                                                winAmount +=bet*1;
                                                 finalString += ("ASEET KÄTEEN POJAT!!!!! " + (bet * 1) + " li-coinia\n");        
                                                 break;
                                             }
