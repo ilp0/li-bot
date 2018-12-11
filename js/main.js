@@ -1,4 +1,3 @@
-
 var Discord = require('discord.js');                //discord libs
 var logger = require('winston');                    //logging lib
 var mysql = require('mysql');                       //mysql lib
@@ -39,7 +38,7 @@ let leaderUpdater = setInterval(() => {
                 //update nickname
                 for (let i = 0; i < result.length; i++) {
                     let membu = g.members.find(m => m.user.id === result[i].id);
-                    nicknameString = (membu.user.username + " | " + result[i].money + " LC");
+                    nicknameString = (membu.user.username + " | " + misc.convertToSmallNums(result[i].money) + " ˡᶜ");
                     membu.nickname = nicknameString;
                     membu.setNickname(nicknameString)
                     .catch(console.error);
