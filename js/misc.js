@@ -52,9 +52,9 @@ module.exports = {
     shortenNum: (num) => {
         let newNumStr = "";
         num = parseFloat(num);
-        if(num >= 1000){
-            if(num >= 100000){
-                if(num >= 1000000){
+        if(num >= 1000 || num <= -1000){
+            if(num >= 100000 || num <= -100000){
+                if(num >= 1000000 || num <= -1000000){
                     newNumStr = (num / 1000000).toFixed(1) + "m"
                 } else {
                     newNumStr = (num / 1000).toFixed() + "k"
