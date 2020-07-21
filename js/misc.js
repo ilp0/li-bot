@@ -15,8 +15,14 @@ module.exports = {
         \n    register
         \n    saldo
         \n    flip
-        \n    bj
-        \n    slots
+        \n    bj <action> (<bet>)
+        \n          new
+        \n          hit
+        \n          stay
+        \n    slots <bet>
+        \n    pp <action> (<bet>)
+        \n          new
+        \n          sel <seleciton>
         \n    give <amount> <username>
         \n !help -- shows this message\`\`\` 
         \nBot source code available @ https://github.com/ilp0/li-bot`;
