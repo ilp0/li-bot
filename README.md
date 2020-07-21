@@ -1,7 +1,34 @@
 # li-bot
 Discord bot experiments
 
-### Usage
+# Available commands: 
+        
+ ### !j -- outputs a random line from input.txt file
+        
+ ### !rr -- russian roulette game 
+        
+ ### !rand <input> -- random number generator 
+        
+ ### !k <command> <bet-size> -- kasino games 
+        
+    !k register  
+    !k saldo   
+    !k flip    
+    !k bj <action> (<bet>)
+          new
+          hit
+          stay
+        
+    !k slots <bet>  
+    !k pp <action> (<bet>) 
+          new
+          sel <seleciton>
+        
+    give <amount> <username>
+        
+ ### !help
+ 
+# Usage
 1. Clone repo 
 2. npm install
 3. paste your auth token to misc/auth.txt
