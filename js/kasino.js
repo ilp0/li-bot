@@ -259,7 +259,7 @@ module.exports = {
                                     message.reply("PIKAPOKERI!!\nKÄTESI: ")
                                     message.reply(handToString(pokerHand))
                                     //message.reply(pokerHand[0][0] + "-" + pokerHand[0][1] + ", " +pokerHand[1][0] + "-" +pokerHand[1][1] + ", [" + pokerHand[2][0] + "-" +pokerHand[2][1] + "], [" +pokerHand[3][0] + "-" +pokerHand[3][1] + "]")
-                                    message.reply("Valitse yksi kahdesta viimeisestä kortista, valitsemalla 1 tai 2")
+                                    message.reply("Valitse yksi kahdesta viimeisestä kortista, valitsemalla 1 tai 2\n!k pp sel 1 | !k pp sel 2")
                                     
                                     //PRINT HAND
 
