@@ -6,7 +6,7 @@
 *
 */
 module.exports = {
-    russanRoulette: function (rrChamber) {
+    russianRoulette: function (rrChamber) {
         
             var text = "*click*";
             var random = Math.floor(Math.random() * rrChamber);

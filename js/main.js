@@ -7,7 +7,7 @@ var kasino = require('./kasino');
 var misc = require('./misc')
 var audio = require('./audio')
 var sessions = [{}];
-const rrChamber = 6;                                //russian roulette chamber variable
+let rrChamber = 6;                                //russian roulette chamber variable
 const prefix = "!";                                 //prefix for commands
 const eArr = [];                                    //emoji array
 logger.remove(logger.transports.Console);
@@ -83,7 +83,9 @@ b.on('message', message => {
             case 'rr':
                 text = rr.russianRoulette(rrChamber);
                 message.reply(text);
-                break;
+                if(rrChamber > 0) rrChamber--;
+		else rrChamber = 6;
+		break;
             //random number generator
             case 'rand':
                 misc.rand(args, message);
@@ -99,10 +101,6 @@ b.on('message', message => {
             //will smith fortnite  
             case 'will':
                 audio.playClip(message, 'misc/audio/fortnite-will-smith.mp4');
-                break;
-            //istun poikittain
-            case 'istun-poikittain':
-                audio.playClip(message, 'misc/audio/istun-poikittain.mp3');
                 break;
             //kasinot
             case 'k':
@@ -159,6 +157,6 @@ con.connect(function(err) {
 
 fs.readFile('misc/auth.txt', 'utf8', function(err, contents) {
     console.log("trying to auth");
-    b.login(contents);
+    b.login("NTE3ODMwNzkxMjU1MDMxODQ4.XYuxXg.Bjd2XHMgzAbxKnq-vHGaJobXOM4");
 });
 
