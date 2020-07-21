@@ -6,8 +6,29 @@
 *
 */
 let misc = require('./misc');
+let poker = require('./poker');
+const { checkPokerHand } = require('./poker');
+const { handToString } = require('./misc');
 const bjDeck = [2,3,4,5,6,7,8,9,10,10,10,10,11];    //card deck for blackjack
+const pokeriDeck = new Array(52)
 const botId = "517830791255031848";
+
+let count = 0
+let maa = 0
+
+pokeriDeck.fill(0,0,52)
+pokeriDeck.map((card,i) => {
+    if((count % 13) == 0 && count != 0) {
+        count=0; 
+        maa++ 
+    }
+    pokeriDeck[i] = [count, maa]
+    count++
+})
+console.log(pokeriDeck[0])
+
+
+
 module.exports = {
     register: function (message, con) {
         con.query("SELECT * FROM user WHERE id = " + con.escape(message.member.user.id), (err, result, field) => {
@@ -77,7 +98,7 @@ module.exports = {
                         if(result[0].money >= bet && bet > 0){
                             let hand = [bjDeck[Math.floor(Math.random() * bjDeck.length)],bjDeck[Math.floor(Math.random() * bjDeck.length)]];
                             let dealerHand = [bjDeck[Math.floor(Math.random() * bjDeck.length)], bjDeck[Math.floor(Math.random() * bjDeck.length)]];
-                            message.reply("\nKätesi: " + hand[0] + " " + hand[1] + " = " + (hand[0] + hand[1] + "\nJakajan käsi: " + dealerHand[0] + " X" + "\n!k bj hit || !k bj stay"));
+                            message.reply(" KOVA-ÄSSÄ BJ!\nKätesi: " + hand[0] + " " + hand[1] + " = " + (hand[0] + hand[1] + "\nJakajan käsi: " + dealerHand[0] + " X" + "\n!k bj hit | !k bj stay"));
                             let gameStatus = "active";
                             sessions.push({game: "bj",id: message.member.user.id, bet: bet, hand: hand, dealerHand: dealerHand, status: gameStatus });
                         } else {
@@ -105,7 +126,7 @@ module.exports = {
                         session.hand.push(newCard);
                         total += newCard;
                         handString += newCard + " ";
-                        message.reply("Your new hand: " + handString + " = " + total);
+                        message.reply("Kätesi: " + handString + " = " + total);
                         sessions[i] = session;
                         if(total > 21) {
                             let isDiscounted = false;
@@ -148,20 +169,20 @@ module.exports = {
                                 handString += card + " ";
                                 playerTotal += card;
                             });
-                            message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\n Jakajan käsi: " + dealerHandString + " = " + dealerTotal);
-                            while (dealerTotal < 16) {
+                            message.reply("\nSinun käsi: " + handString + "= " + playerTotal + "\n Jakajan käsi: " + dealerHandString + " = " + dealerTotal);
+                            setTimeout(() => { while (dealerTotal < 16) {
                                 //hit
                                 newCard = bjDeck[Math.floor(Math.random() * bjDeck.length)];
                                 session.dealerHand.push(newCard);
                                 dealerTotal += newCard;
                                 dealerHandString += newCard + " ";
-                                if (dealerTotal > 21 && playerTotal !== 21) {
+                                if (dealerTotal >= 22 && playerTotal != 21) {
                                     //dealer loses
                                     message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
                                     message.reply("Jakajalla meni yli! Voitit " + (session.bet * 2) + " li-coinia.");
                                     console.log("Jakajalla meni yli! Voitit " + (session.bet * 2) + " li-coinia.");
                                     con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(message.member.user.id)); 
-                                } else if (playerTotal === 21){
+                                } else if (playerTotal == 21){
                                     //BLACKJACK
                                     message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
                                     message.reply("BLACKJACK! VOITIT " + (session.bet + (session.bet * 1.5)) + " li-coinia!");
@@ -173,7 +194,7 @@ module.exports = {
                                     message.reply("Onnea! Voitit " + (session.bet * 2) + " li-coinia.");
                                     console.log("Onnea! Voitit " + (session.bet * 2) + " li-coinia.");
                                     con.query("UPDATE user SET money = money +" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
-                                } else if (playerTotal === dealerTotal && dealerTotal >= 16) {
+                                } else if (playerTotal == dealerTotal && dealerTotal >= 16) {
                                     //rahojen palautus
                                     message.reply("\nSinun käsi: " + handString + " = " + playerTotal + "\nJakajan käsi: " + dealerHandString + " = " + dealerTotal);
                                     message.reply("Tasapeli. Rahojen palautus.")
@@ -186,7 +207,12 @@ module.exports = {
                                     con.query("UPDATE user SET money = money -" + con.escape(session.bet) + " WHERE id = " + con.escape(session.id)); 
 
                                     }
+                                    else {
+                                        message.reply("Jakaja hit")
+                                
+                                    }
                                 }
+                            }, 1000);
                             }
                             sessions.map((s, index) => {
                                 if(s.id === session.id && s.game === "bj") sessions.splice(index,1);
@@ -198,6 +224,123 @@ module.exports = {
             break;
         }
     },
+
+    //videopokeri
+    pikapokeri: function(sessions,args,message,con){
+        let pokerHand = new Array();
+        switch (args[1]){
+            /*
+            *
+            * NEW
+            * 
+            */
+            case "new":
+                let bet = parseInt(args[2], 10);
+                let gameFound = false;
+                let id = message.member.user.id;
+                sessions.map((session, i) => {
+                    if(session.id === message.member.user.id && session.game === "pikapokeri" && session.status === "active"){
+                        message.reply("Sinulla on jo Pikapokeri peli käynnissä.");
+                        gameFound = true;
+                    }
+                });
+                if(!gameFound){
+                    con.query("SELECT money FROM user WHERE id = " + con.escape(id), (err, result, field) => {
+                        if (!err && result.length != 0) {
+                            if(result[0].money >= bet && bet > 0){
+                                let pokerHand = new Array();
+                                    // jaa 4 korttia
+                                    for(let i = 0; i < 4;i++) {
+                                        pokerHand.push(pokeriDeck[Math.floor(Math.random() * pokeriDeck.length)])
+                                    }
+                                    sessions.push({game: "pikapokeri",id: id, bet: bet, hand: pokerHand, status: "active"});
+
+                                    console.log(pokerHand)
+                                    message.reply("PIKAPOKERI!!\nKÄTESI: ")
+                                    message.reply(handToString(pokerHand))
+                                    //message.reply(pokerHand[0][0] + "-" + pokerHand[0][1] + ", " +pokerHand[1][0] + "-" +pokerHand[1][1] + ", [" + pokerHand[2][0] + "-" +pokerHand[2][1] + "], [" +pokerHand[3][0] + "-" +pokerHand[3][1] + "]")
+                                    message.reply("Valitse yksi kahdesta viimeisestä kortista, valitsemalla 1 tai 2")
+                                    
+                                    //PRINT HAND
+
+                            }
+                        }});
+                    }
+                    break;
+
+
+            /*
+            *
+            * SELECT
+            * 
+            */
+            case "sel":
+                //select card
+                let seshIndex = 0;
+                sessions.map((session, i) => {
+                    seshIndex = i;
+                    if (session.id == message.member.user.id && session.status === 'active'){
+                    pokerHand = session.hand;
+                    console.log("found old hand " + pokerHand)
+
+                    switch(args[2]){
+                        case "1":
+                            pokerHand[3] = pokeriDeck[Math.floor(Math.random() * pokeriDeck.length)]
+                            break;
+
+                        case "2":
+                            pokerHand[2] = pokeriDeck[Math.floor(Math.random() * pokeriDeck.length)]
+                            break;
+                    }
+                    pokerHand[4] = (pokeriDeck[Math.floor(Math.random() * pokeriDeck.length)])
+                    message.reply("KÄTESI: ")
+                    console.log(pokerHand)
+                    message.reply(handToString(pokerHand))
+                    //message.reply(pokerHand[0][0] + "-" + pokerHand[0][1] + ", " +pokerHand[1][0] + "-" +pokerHand[1][1] + ", " + pokerHand[2][0] + "-" +pokerHand[2][1] + ", " +pokerHand[3][0] + "-" +pokerHand[3][1] + ", " + pokerHand[4][0] + "-" + pokerHand[4][1])
+                    
+                    //end
+                    switch(checkPokerHand(pokerHand)) {
+                        case 0: 
+                            message.reply("EI MITÄÄN")
+                            break;
+                        case 1:
+                            message.reply("PARI")
+                            break;
+                        case 2:
+                            message.reply("KAKSI PARIA")
+                            break;
+                        case 3:
+                            message.reply("KOLMOSET")
+                            break;
+                        case 4:
+                            message.reply("SUORA")
+                            break;
+                        case 5:
+                            message.reply("VÄRI")
+                            break;
+                        case 6:
+                            message.reply("TÄYSKÄSI")
+                            break;
+                        case 7:
+                            message.reply("NELOSET")
+                            break;
+                        case 8:
+                            message.reply("VÄRISUORA")
+                            break;
+                        case 9:
+                            message.reply("KUNINGASVÄRISUORA")
+                            break;
+                        }
+
+                    }                    
+                    
+                })
+                    sessions.splice(seshIndex,1)
+              
+                    break;
+                }
+                
+        },
     //slots
     slots: function (eArr, sessions, args, message, con) {
         let bet = parseInt(args[1], 10);

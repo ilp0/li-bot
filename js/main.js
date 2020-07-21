@@ -114,12 +114,15 @@ b.on('message', message => {
                     case 'flip':
                         kasino.flip(parseInt(args[1], 10), message, con);
                         break;
-                    case 'bjxxxx':
+                    case 'bj':
                         kasino.bj(sessions, args, message, con);
                         break;
                     //Slot machine
                     case "slots":
                         kasino.slots(eArr, sessions, args, message, con)
+                        break;
+                    case "pp":
+                        kasino.pikapokeri(sessions,args,message,con)
                         break;
                     case "give":
                         kasino.give(args, message, con)
@@ -128,9 +131,6 @@ b.on('message', message => {
                         message.reply("Virheellinen kasino-komento. Yritä uudelleen.");
                     }
                     break;
-            case "rpg": 
-                message.reply("tulossa pian ;()");
-                break;
 
         }
     }
@@ -157,6 +157,7 @@ con.connect(function(err) {
 
 fs.readFile('misc/auth.txt', 'utf8', function(err, contents) {
     console.log("trying to auth");
-    b.login("NTE3ODMwNzkxMjU1MDMxODQ4.XYuxXg.Bjd2XHMgzAbxKnq-vHGaJobXOM4");
+    b.login("NTE3ODMwNzkxMjU1MDMxODQ4.XxcYQg.MwrL91BGADzSc7lK7YMR2Z1FKLU");
 });
+
 

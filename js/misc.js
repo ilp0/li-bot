@@ -66,6 +66,43 @@ module.exports = {
             newNumStr = num;
         }
         return newNumStr;
+    },
+    handToString: (hand) => {
+        let handString ="";
+        hand.map((c,i) => {
+            switch(c[0]){
+                case 1:
+                    c[0] = "A";
+                    break;
+                case 11:
+                    c[0] = "J";
+                    break;
+                case 12:
+                    c[0] = "Q";
+                    break;
+                case 13:
+                    c[0] = "K";
+                    break;
+            }
+            switch(c[1]){
+                case 0:
+                    handString += (c[0] + ":diamonds: ")
+                    break;
+
+                case 1:
+                    handString += (c[0] + ":clubs: ")
+                    break;
+
+                case 2:
+                    handString += (c[0] + ":hearts: ")
+                    break;
+
+                case 3:
+                    handString += (c[0] + ":spades: ")
+                    break;
+            }
+        })
+        return handString;
     }
 }
 
